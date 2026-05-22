@@ -7,10 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <a href="tools/number-to-words.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block"></a>
-    <a href="tools/merge-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
-    
-</a>
     <script>
         tailwind.config = {
             theme: {
@@ -27,7 +23,7 @@
         }
     </script>
     <style>
-        body { background-color: #f8f9fa; color: #333333; }
+        body { background-color: #f8f9fa; color: #333333; margin: 0; padding: 0; }
         .tool-card {
             transition: all 0.3s ease;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -36,7 +32,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
             transform: translateY(-2px);
         }
-        /* Custom styling for icons to match iLovePDF */
         .icon-box { display: inline-flex; position: relative; }
         .icon-box .main-icon { font-size: 1.8rem; }
         .icon-box .sub-icon { position: absolute; bottom: -4px; right: -8px; font-size: 0.8rem; background: white; border-radius: 50%; padding: 2px; }

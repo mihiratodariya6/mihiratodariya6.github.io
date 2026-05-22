@@ -7,8 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         tailwind.config = {
             theme: {
                 extend: {
@@ -22,6 +25,12 @@
         body { background-color: #f8f9fa; color: #333333; }
         .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
         .upload-area.dragover { border-color: #f0714b; background-color: #fff6f4; }
+        
+        .page-thumbnail { transition: all 0.2s; }
+        .page-thumbnail:hover .delete-btn { opacity: 1; }
+        .page-deleted { opacity: 0.4; filter: grayscale(100%); }
+        .page-deleted .delete-btn { opacity: 1; background-color: #e5322d; }
+        .delete-btn { transition: all 0.2s; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -38,18 +47,18 @@
         </div>
     </nav>
 
-    <div class="bg-white border-b border-gray-100 pt-12 pb-10">
+    <div class="bg-white border-b border-gray-100 pt-10 pb-8">
         <div class="max-w-3xl mx-auto text-center px-4">
             <div class="w-16 h-16 mx-auto bg-orange-50 text-brandOrange rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm">
                 <i class="fas fa-cut"></i>
             </div>
-            <h1 class="text-[32px] font-bold text-gray-900 mb-3">Split PDF file</h1>
-            <p class="text-gray-500 text-[18px]">Separate specific pages from your PDF file easily.</p>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Split PDF file</h1>
+            <p class="text-gray-500 text-[16px]">Select pages visually or enter a range to extract them into a new PDF.</p>
         </div>
     </div>
 
-    <main class="flex-grow py-10 px-4">
-        <div class="max-w-3xl mx-auto">
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-5xl mx-auto">
             
             <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-file-upload text-5xl text-gray-300 mb-4"></i>
@@ -61,47 +70,66 @@
                 <input type="file" id="fileInput" class="hidden" accept="application/pdf">
             </div>
 
-            <div id="workspaceSection" class="hidden mt-8">
+            <div id="loadingSection" class="hidden text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-brandOrange mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-700">Loading pages visually...</h3>
+                <p class="text-sm text-gray-500">Please wait a moment.</p>
+            </div>
+
+            <div id="workspaceSection" class="hidden mt-4">
                 
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center justify-between">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <i class="fas fa-file-pdf text-4xl text-brandOrange"></i>
+                        <i class="fas fa-file-pdf text-3xl text-brandOrange"></i>
                         <div>
-                            <h3 id="fileName" class="font-bold text-gray-800 text-lg truncate max-w-xs md:max-w-md">filename.pdf</h3>
-                            <p class="text-sm text-gray-500">Total Pages: <span id="totalPages" class="font-bold">0</span></p>
+                            <h3 id="fileName" class="font-bold text-gray-800 text-base truncate max-w-[200px] md:max-w-md">filename.pdf</h3>
+                            <p class="text-xs text-gray-500">Total Pages: <span id="totalPages" class="font-bold">0</span></p>
                         </div>
                     </div>
-                    <button onclick="resetTool()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xl"></i></button>
+                    <button onclick="resetTool()" class="text-sm text-red-500 hover:text-red-700 font-semibold transition"><i class="fas fa-trash-alt"></i> Remove File</button>
                 </div>
 
-                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm mb-6">
-                    <h3 class="font-bold text-gray-800 text-lg mb-4">Extract Pages</h3>
-                    <p class="text-sm text-gray-500 mb-6">Enter the page range you want to extract into a new PDF.</p>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-lg">Visual Page Selection</h3>
+                            <p class="text-xs text-gray-500">Click the trash icon on a page to remove it from the final PDF.</p>
+                        </div>
+                        <button onclick="restoreAllPages()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded font-semibold transition">Restore All</button>
+                    </div>
                     
-                    <div class="flex items-center gap-4">
+                    <div id="thumbnailsContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-h-[400px] overflow-y-auto p-2 bg-gray-50 rounded-lg border border-gray-100">
+                        </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">Extract by Range (Optional)</h3>
+                    <p class="text-sm text-gray-500 mb-4">You can also limit the extraction to a specific range.</p>
+                    
+                    <div class="flex items-center gap-4 max-w-lg">
                         <div class="flex-1">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">From Page</label>
-                            <input type="number" id="startPage" min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-brandOrange text-lg">
+                            <input type="number" id="startPage" min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-brandOrange">
                         </div>
                         <div class="text-gray-400 mt-5"><i class="fas fa-arrow-right"></i></div>
                         <div class="flex-1">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">To Page</label>
-                            <input type="number" id="endPage" min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-brandOrange text-lg">
+                            <input type="number" id="endPage" min="1" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-brandOrange">
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center">
-                    <button id="splitBtn" onclick="splitPdf()" class="bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3">
+                <div class="text-center bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <button id="splitBtn" onclick="splitPdf()" class="bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3 w-full sm:w-auto">
                         <i class="fas fa-cut"></i> Split PDF
                     </button>
-                    <p id="statusText" class="text-gray-500 mt-3 hidden"><i class="fas fa-spinner fa-spin text-brandOrange"></i> Extracting pages...</p>
+                    <p id="statusText" class="text-gray-500 mt-3 hidden"><i class="fas fa-spinner fa-spin text-brandOrange"></i> Generating your new PDF...</p>
                 </div>
             </div>
 
             <div id="downloadSection" class="hidden mt-8 text-center bg-white p-10 rounded-xl border border-gray-200 shadow-sm">
                 <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">PDF has been split!</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">PDF has been split successfully!</h2>
                 <a id="downloadLink" href="#" download="ToolMitra_Split.pdf" class="bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3">
                     <i class="fas fa-download"></i> Download Split PDF
                 </a>
@@ -116,6 +144,8 @@
     <script>
         let currentPdfBytes = null;
         let totalPdfPages = 0;
+        let activePages = []; // Array to store which pages are kept
+        
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
 
@@ -135,13 +165,27 @@
                 return;
             }
 
+            dropZone.classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+            
             document.getElementById('fileName').innerText = file.name;
             currentPdfBytes = await file.arrayBuffer();
             
-            // Load PDF just to get page count
-            const { PDFDocument } = PDFLib;
-            const pdfDoc = await PDFDocument.load(currentPdfBytes);
-            totalPdfPages = pdfDoc.getPageCount();
+            // Render Thumbnails using PDF.js
+            await renderThumbnails(currentPdfBytes);
+            
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('workspaceSection').classList.remove('hidden');
+        }
+
+        async function renderThumbnails(pdfBytes) {
+            const container = document.getElementById('thumbnailsContainer');
+            container.innerHTML = '';
+            activePages = [];
+
+            const loadingTask = pdfjsLib.getDocument({ data: pdfBytes });
+            const pdf = await loadingTask.promise;
+            totalPdfPages = pdf.numPages;
             
             document.getElementById('totalPages').innerText = totalPdfPages;
             document.getElementById('startPage').value = 1;
@@ -149,17 +193,77 @@
             document.getElementById('endPage').value = totalPdfPages;
             document.getElementById('endPage').max = totalPdfPages;
 
-            // Update UI
-            dropZone.classList.add('hidden');
-            document.getElementById('workspaceSection').classList.remove('hidden');
+            for (let pageNum = 1; pageNum <= totalPdfPages; pageNum++) {
+                activePages.push(pageNum); // Mark all pages as active initially
+                
+                const page = await pdf.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 0.5 }); // Lower scale for fast thumbnail
+                
+                // Create container for thumbnail
+                const thumbDiv = document.createElement('div');
+                thumbDiv.className = 'page-thumbnail relative flex flex-col items-center bg-white p-2 rounded border border-gray-200 shadow-sm';
+                thumbDiv.id = `thumb-${pageNum}`;
+                
+                // Create Canvas
+                const canvas = document.createElement('canvas');
+                canvas.className = 'max-w-full h-auto border border-gray-100 mb-2';
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = { canvasContext: canvas.getContext('2d'), viewport: viewport };
+                await page.render(renderContext).promise;
+                
+                // Create Delete Button
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn absolute top-1 right-1 bg-gray-800/70 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center opacity-0 shadow-md';
+                delBtn.innerHTML = '<i class="fas fa-trash-alt text-xs"></i>';
+                delBtn.onclick = () => togglePage(pageNum);
+
+                // Page Number Label
+                const label = document.createElement('span');
+                label.className = 'text-xs font-bold text-gray-500';
+                label.innerText = `Page ${pageNum}`;
+
+                thumbDiv.appendChild(delBtn);
+                thumbDiv.appendChild(canvas);
+                thumbDiv.appendChild(label);
+                container.appendChild(thumbDiv);
+            }
+        }
+
+        function togglePage(pageNum) {
+            const thumbDiv = document.getElementById(`thumb-${pageNum}`);
+            const index = activePages.indexOf(pageNum);
+            
+            if (index > -1) {
+                // Page is currently active, so DELETE it
+                activePages.splice(index, 1);
+                thumbDiv.classList.add('page-deleted');
+            } else {
+                // Page is deleted, so RESTORE it
+                activePages.push(pageNum);
+                activePages.sort((a, b) => a - b); // keep sorted
+                thumbDiv.classList.remove('page-deleted');
+            }
+        }
+
+        function restoreAllPages() {
+            activePages = [];
+            for (let i = 1; i <= totalPdfPages; i++) {
+                activePages.push(i);
+                document.getElementById(`thumb-${i}`).classList.remove('page-deleted');
+            }
         }
 
         async function splitPdf() {
-            let start = parseInt(document.getElementById('startPage').value);
-            let end = parseInt(document.getElementById('endPage').value);
+            let start = parseInt(document.getElementById('startPage').value) || 1;
+            let end = parseInt(document.getElementById('endPage').value) || totalPdfPages;
 
-            if (start < 1 || end > totalPdfPages || start > end) {
-                alert(`Please enter a valid range between 1 and ${totalPdfPages}.`);
+            // Combine both logics: Must be visually active AND within the range input
+            let finalPagesToExtract = activePages.filter(p => p >= start && p <= end);
+
+            if (finalPagesToExtract.length === 0) {
+                alert(`No pages selected! Please check your visual selection and range.`);
                 return;
             }
 
@@ -173,11 +277,8 @@
                 const originalPdf = await PDFDocument.load(currentPdfBytes);
                 const newPdf = await PDFDocument.create();
 
-                // Generate array of page indices (0-based)
-                const indices = [];
-                for (let i = start - 1; i <= end - 1; i++) {
-                    indices.push(i);
-                }
+                // Convert 1-based page numbers to 0-based indices for pdf-lib
+                const indices = finalPagesToExtract.map(p => p - 1);
 
                 const copiedPages = await newPdf.copyPages(originalPdf, indices);
                 copiedPages.forEach((page) => newPdf.addPage(page));
@@ -193,7 +294,7 @@
 
             } catch (error) {
                 console.error(error);
-                alert("Error splitting PDF.");
+                alert("Error extracting PDF pages.");
             } finally {
                 splitBtn.classList.remove('hidden');
                 statusText.classList.add('hidden');
@@ -202,9 +303,11 @@
 
         function resetTool() {
             currentPdfBytes = null;
+            activePages = [];
             fileInput.value = "";
             document.getElementById('workspaceSection').classList.add('hidden');
             document.getElementById('downloadSection').classList.add('hidden');
+            document.getElementById('thumbnailsContainer').innerHTML = '';
             dropZone.classList.remove('hidden');
         }
     </script>
