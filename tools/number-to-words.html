@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Words Converter - ToolMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brandRed: '#e5322d',
+                        brandBlue: '#5bc0de',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8f9fa; color: #333333; }
+        .workspace-card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+        }
+        /* Hide arrows from number input */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fas fa-heart text-brandRed text-2xl"></i>
+                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+            </a>
+            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-brandRed flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
+        </div>
+    </nav>
+
+    <div class="bg-[#f2f8fc] border-b border-[#e1eff8] pt-12 pb-12">
+        <div class="max-w-3xl mx-auto text-center px-4">
+            <div class="w-16 h-16 mx-auto bg-[#5bc0de] text-white rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-3">Number to Words Converter</h1>
+            <p class="text-gray-600 text-lg">Convert Indian numbers and currency to text in English, Gujarati, and Hindi instantly.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow py-12 px-4">
+        <div class="max-w-4xl mx-auto workspace-card bg-white rounded-2xl p-6 md:p-10">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Enter Number / Amount</label>
+                    <input type="number" id="numInput" placeholder="e.g. 125000" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-xl focus:outline-none focus:border-brandBlue transition-colors" oninput="processNumber()">
+                    <div class="mt-3 text-sm text-gray-500 font-medium flex items-center gap-2">
+                        <i class="fas fa-info-circle text-brandBlue"></i> Auto Format: <span id="formattedNum" class="text-gray-900 font-bold tracking-wider">0</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <div class="flex space-x-2 mb-3">
+                        <button onclick="setLang('en')" id="tab-en" class="px-4 py-2 rounded-md bg-brandBlue text-white text-sm font-bold transition">English</button>
+                        <button onclick="setLang('gu')" id="tab-gu" class="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-bold transition">Gujarati</button>
+                        <button onclick="setLang('hi')" id="tab-hi" class="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-bold transition">Hindi</button>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 flex-grow relative group">
+                        <p id="outputText" class="text-xl font-semibold text-gray-800 leading-relaxed">Enter a number to see the magic...</p>
+                    </div>
+
+                    <div class="flex gap-3 mt-4">
+                        <button onclick="copyText()" class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-md text-sm font-bold transition flex items-center justify-center gap-2">
+                            <i class="fas fa-copy"></i> <span id="copyBtnText">Copy</span>
+                        </button>
+                        <button onclick="speakText()" class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-md text-sm font-bold transition flex items-center justify-center gap-2">
+                            <i class="fas fa-volume-up"></i> Listen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentLang = 'en';
+        let currentWords = { en: '', gu: '', hi: '' };
+
+        // Dictionary arrays for 1 to 99
+        const onesEN = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+        const tensEN = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+        
+        const wordsGU = ["", "એક", "બે", "ત્રણ", "ચાર", "પાંચ", "છ", "સાત", "આઠ", "નવ", "દસ", "અગિયાર", "બાર", "તેર", "ચૌદ", "પંદર", "સોળ", "સત્તર", "અઢાર", "ઓગણીસ", "વીસ", "એકવીસ", "બાવીસ", "તેવીસ", "ચોવીસ", "પચ્ચીસ", "છવ્વીસ", "સત્તાવીસ", "અઠ્ઠાવીસ", "ઓગણત્રીસ", "ત્રીસ", "એકત્રીસ", "બત્રીસ", "તેત્રીસ", "ચોત્રીસ", "પાંત્રીસ", "છત્રીસ", "સાડત્રીસ", "આડત્રીસ", "ઓગણચાલીસ", "ચાલીસ", "એકતાળીસ", "બેતાળીસ", "તેતાળીસ", "ચુંમાલીસ", "પિસ્તાળીસ", "છેતાળીસ", "સુડતાળીસ", "અડતાળીસ", "ઓગણપચાસ", "પચાસ", "એકાવન", "બાવન", "ત્રેપન", "ચોપન", "પંચાવન", "છપ્પન", "સત્તાવન", "અઠ્ઠાવન", "ઓગણસાઠ", "સાઠ", "એકસઠ", "બાસઠ", "ત્રેસઠ", "ચોસઠ", "પાંસઠ", "છાસઠ", "સડસઠ", "અડસઠ", "અગણોસિત્તેર", "સિત્તેર", "એકોતેર", "બોતેર", "તોતેર", "ચુમોતેર", "પંચોતેર", "છોતેર", "સિત્યોતેર", "ઇઠ્યોતેર", "ઓગણ્યાએંસી", "એંસી", "એક્યાસી", "બ્યાસી", "ત્યાસી", "ચોર્યાસી", "પંચાસી", "છ્યાસી", "સિત્યાસી", "ઇઠ્યાસી", "નેવ્યાસી", "નેવું", "એકાણું", "બાણું", "ત્રાણું", "ચોરાણું", "પંચાણું", "છેન્નુ", "સત્તાણું", "અઠ્ઠાણું", "નવાણું"];
+        
+        const wordsHI = ["", "एक", "दो", "तीन", "चार", "पांच", "छह", "सात", "आठ", "नौ", "दस", "ग्यारह", "बारह", "तेरह", "चौदह", "पंद्रह", "सोलह", "सत्रह", "अठारह", "उन्नीस", "बीस", "इक्कीस", "बाईस", "तेईस", "चौबीस", "पच्चीस", "छब्बीस", "सत्ताईस", "अट्ठाईस", "उनतीस", "तीस", "इकतीस", "बत्तीस", "तैंतीस", "चौंतीस", "पैंतीस", "छत्तीस", "सैंतीस", "अड़तीस", "उनतालीस", "चालीस", "इकतालीस", "बयालीस", "तैंतालीस", "चौवालीस", "पैंतालीस", "छियालीस", "सैंतालीस", "अड़तालीस", "उनचास", "पचास", "इक्यावन", "बावन", "तिरेपन", "चौवन", "पचपन", "छप्पन", "सत्तावन", "अट्ठावन", "उनसठ", "साठ", "इकसठ", "बासठ", "तिरसठ", "चौंसठ", "पैंसठ", "छियासठ", "सड़सठ", "अड़सठ", "उनहत्तर", "सत्तर", "इकहत्तर", "बहत्तर", "तिहत्तर", "चौहत्तर", "पचहत्तर", "छिहत्तर", "सतहत्तर", "अठहत्तर", "उनासी", "अस्सी", "इक्यासी", "बयासी", "तिरासी", "चौरासी", "पचासी", "छियासी", "सत्तासी", "अट्ठासी", "नवासी", "नब्बे", "इक्यानवे", "बानवे", "तिरानवे", "चौरानवे", "पचानवे", "छियानवे", "सत्तानवे", "अट्ठानवे", "निन्यानवे"];
+
+        const scales = {
+            en: ["", "Thousand", "Lakh", "Crore"],
+            gu: ["", "હજાર", "લાખ", "કરોડ"],
+            hi: ["", "हज़ार", "लाख", "करोड़"]
+        };
+        const hundred = { en: "Hundred", gu: "સો", hi: "सौ" };
+
+        function getTwoDigitsText(n, lang) {
+            if (n === 0) return "";
+            if (lang === 'en') {
+                if (n < 20) return onesEN[n];
+                return tensEN[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + onesEN[n % 10] : "");
+            } else if (lang === 'gu') {
+                return wordsGU[n];
+            } else {
+                return wordsHI[n];
+            }
+        }
+
+        function convertToWords(num, lang) {
+            if (num == 0) return (lang === 'en') ? "Zero" : (lang === 'gu') ? "શૂન્ય" : "शून्य";
+            let str = "";
+            let cr = Math.floor(num / 10000000);
+            num %= 10000000;
+            let lkh = Math.floor(num / 100000);
+            num %= 100000;
+            let thd = Math.floor(num / 1000);
+            num %= 1000;
+            let hnd = Math.floor(num / 100);
+            let tensOnes = num % 100;
+
+            if (cr > 0) str += getTwoDigitsText(cr, lang) + " " + scales[lang][3] + " ";
+            if (lkh > 0) str += getTwoDigitsText(lkh, lang) + " " + scales[lang][2] + " ";
+            if (thd > 0) str += getTwoDigitsText(thd, lang) + " " + scales[lang][1] + " ";
+            if (hnd > 0) str += getTwoDigitsText(hnd, lang) + " " + hundred[lang] + " ";
+            if (tensOnes > 0) {
+                if (str !== "" && lang === 'en') str += "and ";
+                str += getTwoDigitsText(tensOnes, lang);
+            }
+            return str.trim();
+        }
+
+        function processNumber() {
+            let input = document.getElementById("numInput").value;
+            let formattedText = document.getElementById("formattedNum");
+            
+            if (!input || input < 0 || input > 999999999) {
+                document.getElementById("outputText").innerText = "Enter a valid number (Max 99 Crores)";
+                formattedText.innerText = "0";
+                return;
+            }
+
+            // Indian Comma Formatting
+            let num = parseInt(input);
+            formattedText.innerText = num.toLocaleString('en-IN');
+
+            // Convert to all languages
+            currentWords.en = convertToWords(num, 'en');
+            currentWords.gu = convertToWords(num, 'gu');
+            currentWords.hi = convertToWords(num, 'hi');
+
+            // Update UI
+            updateUI();
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            ['en', 'gu', 'hi'].forEach(l => {
+                let btn = document.getElementById(`tab-${l}`);
+                if (l === lang) {
+                    btn.className = "px-4 py-2 rounded-md bg-brandBlue text-white text-sm font-bold transition";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-bold transition";
+                }
+            });
+            updateUI();
+        }
+
+        function updateUI() {
+            let outText = currentWords[currentLang];
+            document.getElementById("outputText").innerText = outText ? outText : "Enter a number...";
+        }
+
+        function copyText() {
+            let text = document.getElementById("outputText").innerText;
+            if (text && text !== "Enter a number...") {
+                navigator.clipboard.writeText(text);
+                let btnText = document.getElementById("copyBtnText");
+                btnText.innerText = "Copied!";
+                setTimeout(() => btnText.innerText = "Copy", 2000);
+            }
+        }
+
+        function speakText() {
+            let text = document.getElementById("outputText").innerText;
+            if (text && text !== "Enter a number...") {
+                let msg = new SpeechSynthesisUtterance(text);
+                if(currentLang === 'hi') msg.lang = 'hi-IN';
+                else if(currentLang === 'gu') msg.lang = 'gu-IN';
+                else msg.lang = 'en-IN';
+                window.speechSynthesis.speak(msg);
+            }
+        }
+    </script>
+</body>
+</html>
