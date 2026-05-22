@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word to PDF - ToolMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brandBlue: '#3c78d8' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8f9fa; color: #333333; }
+        .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
+        .upload-area.dragover { border-color: #3c78d8; background-color: #f0f4fa; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fas fa-heart text-[#e5322d] text-2xl"></i>
+                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+            </a>
+            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-brandBlue flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
+        </div>
+    </nav>
+
+    <div class="bg-white border-b border-gray-100 pt-10 pb-8">
+        <div class="max-w-3xl mx-auto text-center px-4">
+            <div class="w-16 h-16 mx-auto bg-blue-50 text-brandBlue rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm">
+                <i class="fas fa-file-word"></i>
+            </div>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Word to PDF</h1>
+            <p class="text-gray-500 text-[16px]">Convert DOC and DOCX files to PDF accurately in just one click.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-3xl mx-auto">
+            
+            <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-word text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Select WORD file</h3>
+                <p class="text-gray-500 text-sm mb-6">or drop Word document here (.docx)</p>
+                <button class="bg-brandBlue hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-md">
+                    Select WORD file
+                </button>
+                <input type="file" id="fileInput" class="hidden" accept=".docx">
+            </div>
+
+            <div id="workspaceSection" class="hidden mt-4">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-file-word text-4xl text-brandBlue"></i>
+                        <div>
+                            <h3 id="fileName" class="font-bold text-gray-800 text-lg truncate max-w-xs md:max-w-md">document.docx</h3>
+                            <p class="text-sm text-gray-500" id="fileSizeTxt">0 KB</p>
+                        </div>
+                    </div>
+                    <button onclick="resetTool()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xl"></i></button>
+                </div>
+
+                <div class="text-center bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <button id="convertBtn" onclick="processWordToPdf()" class="bg-brandBlue hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3 w-full sm:w-auto">
+                        <i class="fas fa-cog"></i> Convert to PDF
+                    </button>
+                    <p id="statusText" class="text-gray-500 mt-3 hidden"><i class="fas fa-spinner fa-spin text-brandBlue"></i> Converting Word elements to PDF layout...</p>
+                </div>
+            </div>
+
+            <div id="downloadSection" class="hidden mt-8 text-center bg-white p-10 rounded-xl border border-gray-200 shadow-sm">
+                <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">WORD file has been converted to PDF!</h2>
+                
+                <button id="downloadBtn" class="bg-brandBlue hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3">
+                    <i class="fas fa-download"></i> Download PDF File
+                </button>
+                
+                <div class="mt-6">
+                    <button onclick="resetTool()" class="text-gray-500 hover:text-gray-700 font-semibold underline text-sm">Convert another Word file</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentFile = null;
+        let pdfBlobUrl = null;
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        function handleFile(file) {
+            if (!file) return;
+            
+            // Accept only .docx files
+            if (file.name.endsWith('.docx') || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+                currentFile = file;
+                document.getElementById('fileName').innerText = file.name;
+                document.getElementById('fileSizeTxt').innerText = (file.size / 1024).toFixed(2) + " KB";
+                
+                dropZone.classList.add('hidden');
+                document.getElementById('workspaceSection').classList.remove('hidden');
+            } else {
+                alert("Please upload a valid Word document (.docx format). Old .doc format is not supported client-side.");
+            }
+        }
+
+        function processWordToPdf() {
+            const convertBtn = document.getElementById('convertBtn');
+            const statusText = document.getElementById('statusText');
+            
+            convertBtn.classList.add('hidden');
+            statusText.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(loadEvent) {
+                const arrayBuffer = loadEvent.target.result;
+                
+                // 1. Convert DOCX to HTML using Mammoth
+                mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                .then(function(result) {
+                    const htmlContent = result.value; 
+                    
+                    // Create a temporal styled container for rendering
+                    const element = document.createElement('div');
+                    element.style.padding = '45px';
+                    element.style.color = '#333333';
+                    element.style.backgroundColor = '#ffffff';
+                    element.style.fontFamily = 'Inter, sans-serif';
+                    element.style.lineHeight = '1.6';
+                    element.innerHTML = htmlContent;
+                    
+                    // 2. Set html2pdf options
+                    const opt = {
+                        margin:       [0.5, 0.5, 0.5, 0.5],
+                        filename:     currentFile.name.replace(/\.[^/.]+$/, "") + ".pdf",
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2, useCORS: true },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+                    
+                    // 3. Generate PDF Worker
+                    html2pdf().set(opt).from(element).outputPdf('blob').then(function(blob) {
+                        pdfBlobUrl = URL.createObjectURL(blob);
+                        
+                        // Attach download trigger to button
+                        const downloadBtn = document.getElementById('downloadBtn');
+                        downloadBtn.onclick = function() {
+                            const a = document.createElement('a');
+                            a.href = pdfBlobUrl;
+                            a.download = opt.filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        };
+
+                        // Switch Screen UI
+                        document.getElementById('workspaceSection').classList.add('hidden');
+                        document.getElementById('downloadSection').classList.remove('hidden');
+                    }).catch(err => {
+                        console.error(err);
+                        alert("Error generating PDF structure.");
+                        resetBtnUI();
+                    });
+                })
+                .catch(function(err) {
+                    console.error(err);
+                    alert("Error parsing Word document elements.");
+                    resetBtnUI();
+                });
+            };
+            
+            reader.readAsArrayBuffer(currentFile);
+        }
+
+        function resetBtnUI() {
+            document.getElementById('convertBtn').classList.remove('hidden');
+            document.getElementById('statusText').classList.add('hidden');
+        }
+
+        function resetTool() {
+            currentFile = null;
+            if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+            pdfBlobUrl = null;
+            fileInput.value = "";
+            document.getElementById('workspaceSection').classList.add('hidden');
+            document.getElementById('downloadSection').classList.add('hidden');
+            document.getElementById('statusText').classList.add('hidden');
+            document.getElementById('convertBtn').classList.remove('hidden');
+            dropZone.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

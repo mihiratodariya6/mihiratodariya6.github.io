@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         tailwind.config = {
             theme: {
                 extend: {
@@ -44,8 +46,8 @@
             <div class="w-16 h-16 mx-auto bg-green-50 text-brandGreen rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm">
                 <i class="fas fa-compress"></i>
             </div>
-            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Compress PDF file</h1>
-            <p class="text-gray-500 text-[16px]">Reduce file size while optimizing for maximal PDF quality.</p>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Extreme PDF Compressor</h1>
+            <p class="text-gray-500 text-[16px]">Shrink PDF to extreme small sizes (e.g., 10KB-50KB). Note: May cause blurriness.</p>
         </div>
     </div>
 
@@ -79,9 +81,9 @@
                     <h3 class="font-bold text-gray-800 text-lg mb-2">Target Compression Size</h3>
                     <p class="text-sm text-gray-500 mb-6">Enter the maximum size you want for your compressed PDF.</p>
                     
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 mb-4">
                         <div class="flex-1">
-                            <input type="number" id="targetSize" placeholder="e.g. 500" class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-brandGreen text-lg font-semibold text-gray-700">
+                            <input type="number" id="targetSize" placeholder="e.g. 50" class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-brandGreen text-lg font-semibold text-gray-700">
                         </div>
                         <div class="w-1/3">
                             <select id="sizeUnit" class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-brandGreen text-lg font-semibold text-gray-700 bg-white cursor-pointer">
@@ -90,16 +92,28 @@
                             </select>
                         </div>
                     </div>
-                    <p class="text-xs text-orange-500 mt-3 font-medium">
-                        <i class="fas fa-info-circle"></i> Note: We will apply maximum possible optimization to reach your target size without losing document structure.
-                    </p>
+                    <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg flex items-start gap-3">
+                        <i class="fas fa-exclamation-triangle text-orange-500 mt-1"></i>
+                        <p class="text-xs text-orange-700 font-medium leading-relaxed">
+                            <strong>Extreme Compression Warning:</strong> To reach very small sizes like 10KB - 50KB, we convert all pages to compressed images. The text will become an image and may look blurry.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="text-center bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                     <button id="compressBtn" onclick="compressPdf()" class="bg-brandGreen hover:bg-green-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3 w-full sm:w-auto">
                         <i class="fas fa-compress"></i> Compress PDF
                     </button>
-                    <p id="statusText" class="text-gray-500 mt-3 hidden"><i class="fas fa-spinner fa-spin text-brandGreen"></i> Optimizing your PDF to fit size...</p>
+                    
+                    <div id="progressSection" class="hidden mt-6 text-left max-w-md mx-auto">
+                        <div class="flex justify-between text-sm mb-1 text-gray-600 font-semibold">
+                            <span id="progressText">Processing pages...</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progressBar" class="bg-brandGreen h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -124,12 +138,12 @@
     </main>
 
     <script>
-        let currentFile = null;
-        let originalBytes = null;
+        let currentPdfData = null;
+        let originalSizeInBytes = 0;
+        
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
 
-        // FIXED syntax error in dragleave
         dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover')); 
         dropZone.addEventListener('drop', (e) => {
@@ -154,11 +168,12 @@
                 return;
             }
 
-            currentFile = file;
-            originalBytes = await file.arrayBuffer();
+            originalSizeInBytes = file.size;
+            const arrayBuffer = await file.arrayBuffer();
+            currentPdfData = new Uint8Array(arrayBuffer);
             
             document.getElementById('fileName').innerText = file.name;
-            const formattedSize = formatBytes(file.size);
+            const formattedSize = formatBytes(originalSizeInBytes);
             document.getElementById('originalSize').innerText = formattedSize;
             document.getElementById('oldSizeTxt').innerText = formattedSize;
 
@@ -167,29 +182,85 @@
         }
 
         async function compressPdf() {
-            const compressBtn = document.getElementById('compressBtn');
-            const statusText = document.getElementById('statusText');
-            
-            let targetVal = document.getElementById('targetSize').value;
+            let targetVal = parseFloat(document.getElementById('targetSize').value);
             let targetUnit = document.getElementById('sizeUnit').value;
 
-            if(!targetVal) {
-                alert("Please enter a target size.");
+            if(!targetVal || targetVal <= 0) {
+                alert("Please enter a valid target size.");
                 return;
             }
 
+            const compressBtn = document.getElementById('compressBtn');
+            const progressSection = document.getElementById('progressSection');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            
             compressBtn.classList.add('hidden');
-            statusText.classList.remove('hidden');
+            progressSection.classList.remove('hidden');
 
             try {
+                // Calculate target bytes
+                const targetBytes = targetUnit === 'MB' ? targetVal * 1024 * 1024 : targetVal * 1024;
+                
+                // Determine compression intensity (Resolution Scale and JPEG Quality)
+                let imgScale = 1.0;
+                let imgQuality = 0.8;
+                
+                // If user wants Extreme compression (e.g., less than 20% of original size or tiny KB)
+                if (targetBytes < originalSizeInBytes * 0.5) { imgScale = 0.8; imgQuality = 0.5; }
+                if (targetBytes < originalSizeInBytes * 0.2) { imgScale = 0.5; imgQuality = 0.3; }
+                if (targetBytes <= 100000) { imgScale = 0.4; imgQuality = 0.2; } // Under 100KB -> Extreme Blur
+                if (targetBytes <= 30000) { imgScale = 0.25; imgQuality = 0.1; } // Under 30KB -> Super Extreme Blur
+
+                // 1. Load original PDF with PDF.js
+                const loadingTask = pdfjsLib.getDocument({ data: currentPdfData.slice(0) });
+                const pdfjsDoc = await loadingTask.promise;
+                const totalPages = pdfjsDoc.numPages;
+
+                // 2. Create NEW blank PDF with PDF-Lib
                 const { PDFDocument } = PDFLib;
-                
-                // Load original PDF
-                const pdfDoc = await PDFDocument.load(originalBytes);
-                
-                // Attempt maximum structural optimization using pdf-lib
-                const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: true });
-                
+                const newPdf = await PDFDocument.create();
+
+                // 3. Loop through pages, convert to low-quality JPEG, add to new PDF
+                for (let i = 1; i <= totalPages; i++) {
+                    // Update Progress UI
+                    let pct = Math.round((i / totalPages) * 100);
+                    progressBar.style.width = `${pct}%`;
+                    progressPercent.innerText = `${pct}%`;
+
+                    const page = await pdfjsDoc.getPage(i);
+                    const originalViewport = page.getViewport({ scale: 1.0 }); // Original size for the PDF page
+                    const renderViewport = page.getViewport({ scale: imgScale }); // Scaled down for image capture
+
+                    // Render to hidden canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = renderViewport.width;
+                    canvas.height = renderViewport.height;
+                    const ctx = canvas.getContext('2d');
+
+                    await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
+
+                    // Convert canvas to highly compressed JPEG data
+                    const jpegDataUrl = canvas.toDataURL('image/jpeg', imgQuality);
+                    
+                    // Fetch bytes from data URL
+                    const response = await fetch(jpegDataUrl);
+                    const jpegBytes = await response.arrayBuffer();
+
+                    // Embed JPEG in new PDF
+                    const embeddedImage = await newPdf.embedJpg(jpegBytes);
+                    const newPage = newPdf.addPage([originalViewport.width, originalViewport.height]);
+                    
+                    newPage.drawImage(embeddedImage, {
+                        x: 0,
+                        y: 0,
+                        width: originalViewport.width,
+                        height: originalViewport.height,
+                    });
+                }
+
+                // 4. Save and generate download link
+                const compressedPdfBytes = await newPdf.save();
                 const blob = new Blob([compressedPdfBytes], { type: "application/pdf" });
                 const url = URL.createObjectURL(blob);
                 
@@ -201,20 +272,21 @@
 
             } catch (error) {
                 console.error(error);
-                alert("Error compressing PDF.");
+                alert("Error compressing PDF. See console.");
             } finally {
                 compressBtn.classList.remove('hidden');
-                statusText.classList.add('hidden');
+                progressSection.classList.add('hidden');
+                progressBar.style.width = `0%`;
             }
         }
 
         function resetTool() {
-            currentFile = null;
-            originalBytes = null;
+            currentPdfData = null;
             fileInput.value = "";
             document.getElementById('targetSize').value = "";
             document.getElementById('workspaceSection').classList.add('hidden');
             document.getElementById('downloadSection').classList.add('hidden');
+            document.getElementById('progressSection').classList.add('hidden');
             dropZone.classList.remove('hidden');
         }
     </script>
