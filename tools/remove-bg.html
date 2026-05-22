@@ -8,8 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -31,7 +29,6 @@
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
         }
-        /* Custom Dropdown Animation */
         .dropdown-menu { display: none; opacity: 0; transition: opacity 0.2s ease; }
         .dropdown-menu.show { display: block; opacity: 1; }
     </style>
@@ -87,7 +84,7 @@
                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
                     <div id="progressBar" class="bg-brandPurple h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
-                <p class="text-xs text-brandPurple font-bold" id="progressText">Downloading Model parameters (First time only)...</p>
+                <p class="text-xs text-brandPurple font-bold" id="progressText">Downloading AI Model (First time takes longer)...</p>
             </div>
 
             <div id="resultSection" class="hidden mt-8">
@@ -110,17 +107,17 @@
                 </div>
 
                 <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <button onclick="resetTool()" class="bg-white border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 rounded-full transition-colors text-lg">
+                    <button onclick="window.resetTool()" class="bg-white border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 rounded-full transition-colors text-lg">
                         Upload Another
                     </button>
                     
                     <div class="relative inline-block text-left">
-                        <button onclick="toggleDownloadMenu()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors text-lg shadow-lg flex items-center justify-center gap-2">
+                        <button onclick="window.toggleDownloadMenu()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors text-lg shadow-lg flex items-center justify-center gap-2">
                             Download <i class="fas fa-chevron-down text-sm ml-1"></i>
                         </button>
                         
                         <div id="downloadMenu" class="dropdown-menu absolute right-0 bottom-full mb-2 w-72 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-hidden">
-                            <div onclick="downloadImage('standard')" class="cursor-pointer hover:bg-gray-50 p-4 border-b border-gray-100 flex items-center justify-between group">
+                            <div onclick="window.downloadImage('standard')" class="cursor-pointer hover:bg-gray-50 p-4 border-b border-gray-100 flex items-center justify-between group">
                                 <div>
                                     <h4 class="text-gray-800 font-bold text-base flex items-center gap-2"><i class="fas fa-eye text-gray-400 group-hover:text-blue-500"></i> Preview Image</h4>
                                     <p class="text-gray-500 text-xs mt-1">Resized to max 500x500 px</p>
@@ -128,7 +125,7 @@
                                 <span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-600 transition">Free</span>
                             </div>
                             
-                            <div onclick="downloadImage('hd')" class="cursor-pointer hover:bg-purple-50 p-4 flex items-center justify-between group bg-purple-50/30">
+                            <div onclick="window.downloadImage('hd')" class="cursor-pointer hover:bg-purple-50 p-4 flex items-center justify-between group bg-purple-50/30">
                                 <div>
                                     <h4 class="text-purple-800 font-bold text-base flex items-center gap-2"><i class="fas fa-bolt text-yellow-500"></i> HD Quality (Max)</h4>
                                     <p class="text-gray-500 text-xs mt-1" id="hdResolutionTxt">Original Resolution</p>
@@ -143,11 +140,15 @@
         </div>
     </main>
 
-    <script>
-        let currentFile = null;
-        let currentResultUrl = null;
-        let originalWidth = 0;
-        let originalHeight = 0;
+    <script type="module">
+        // Import directly from the CDN as a module (Version 1.7.0 is much faster and stable)
+        import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm";
+
+        // Bind global variables
+        window.currentFile = null;
+        window.currentResultUrl = null;
+        window.originalWidth = 0;
+        window.originalHeight = 0;
         
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
@@ -157,47 +158,43 @@
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
+            window.handleFile(e.dataTransfer.files[0]);
         });
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        fileInput.addEventListener('change', (e) => window.handleFile(e.target.files[0]));
 
-        function handleFile(file) {
+        window.handleFile = function(file) {
             if (!file || !file.type.startsWith('image/')) {
                 alert("Please upload a valid image file.");
                 return;
             }
 
-            currentFile = file;
+            window.currentFile = file;
             
-            // Show original image and get dimensions
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    originalWidth = img.width;
-                    originalHeight = img.height;
-                    document.getElementById('hdResolutionTxt').innerText = `${originalWidth} x ${originalHeight} px`;
+                    window.originalWidth = img.width;
+                    window.originalHeight = img.height;
+                    document.getElementById('hdResolutionTxt').innerText = `${window.originalWidth} x ${window.originalHeight} px`;
                 }
                 img.src = e.target.result;
                 document.getElementById('originalImg').src = e.target.result;
             }
             reader.readAsDataURL(file);
 
-            // UI Transitions
             dropZone.classList.add('hidden');
             document.getElementById('processingSection').classList.remove('hidden');
             
-            // Start AI Process
-            processBackgroundRemoval();
+            window.processBackgroundRemoval();
         }
 
-        async function processBackgroundRemoval() {
+        window.processBackgroundRemoval = async function() {
             const progressBar = document.getElementById('progressBar');
             const progressText = document.getElementById('progressText');
 
-            // FIX for the crash: Explicitly provide the publicPath for the WebAssembly files
             const config = {
-                publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/",
+                // By not setting publicPath, it uses imgly's optimized high-speed WebAssembly servers
                 progress: (key, current, total) => {
                     let percent = Math.round((current / total) * 100);
                     if(percent > 100) percent = 100;
@@ -205,7 +202,7 @@
                     progressBar.style.width = percent + '%';
                     
                     if(key.includes('fetch')) {
-                        progressText.innerText = `Downloading AI Engine Models (${percent}%)...`;
+                        progressText.innerText = `Downloading AI Models (${percent}%)...`;
                     } else if(key.includes('compute')) {
                         progressText.innerText = `Extracting Subject perfectly (${percent}%)...`;
                     }
@@ -213,32 +210,26 @@
             };
 
             try {
-                // Call imgly with explicit config
-                const imageBlob = await imglyRemoveBackground(currentFile, config);
+                // Call the ES Module imported function directly
+                const imageBlob = await removeBackground(window.currentFile, config);
 
-                // Generate URL for the transparent image
-                currentResultUrl = URL.createObjectURL(imageBlob);
-                
-                // Set images
-                document.getElementById('transparentImg').src = currentResultUrl;
+                window.currentResultUrl = URL.createObjectURL(imageBlob);
+                document.getElementById('transparentImg').src = window.currentResultUrl;
 
-                // Show Results
                 document.getElementById('processingSection').classList.add('hidden');
                 document.getElementById('resultSection').classList.remove('hidden');
 
             } catch (error) {
-                console.error("AI Error: ", error);
-                alert("An error occurred during AI processing. Ensure you have a good internet connection so the model can load properly.");
-                resetTool();
+                console.error("Detailed AI Error: ", error);
+                alert("Error Details: " + (error.message || JSON.stringify(error)) + "\n\nTry using a slightly smaller image if memory crashed.");
+                window.resetTool();
             }
         }
 
-        // Dropdown toggle logic
-        function toggleDownloadMenu() {
+        window.toggleDownloadMenu = function() {
             document.getElementById('downloadMenu').classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
         window.onclick = function(event) {
             if (!event.target.matches('.bg-blue-600') && !event.target.closest('.bg-blue-600')) {
                 let dropdowns = document.getElementsByClassName("dropdown-menu");
@@ -251,17 +242,17 @@
             }
         }
 
-        function downloadImage(type) {
-            if(!currentResultUrl) return;
+        window.downloadImage = function(type) {
+            if(!window.currentResultUrl) return;
 
             const img = new Image();
+            img.crossOrigin = "Anonymous";
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 let w = img.width;
                 let h = img.height;
 
-                // Resize for "Standard Preview" (Max 500x500)
                 if (type === 'standard') {
                     const maxSize = 500;
                     if (w > maxSize || h > maxSize) {
@@ -275,7 +266,6 @@
                 canvas.height = h;
                 ctx.drawImage(img, 0, 0, w, h);
 
-                // Export and Download
                 canvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -287,21 +277,21 @@
                     URL.revokeObjectURL(url);
                 }, 'image/png', 1.0);
             };
-            img.src = currentResultUrl;
+            img.src = window.currentResultUrl;
         }
 
-        function resetTool() {
-            currentFile = null;
-            if(currentResultUrl) URL.revokeObjectURL(currentResultUrl);
-            currentResultUrl = null;
+        window.resetTool = function() {
+            window.currentFile = null;
+            if(window.currentResultUrl) URL.revokeObjectURL(window.currentResultUrl);
+            window.currentResultUrl = null;
             
-            fileInput.value = "";
+            document.getElementById('fileInput').value = "";
             document.getElementById('progressBar').style.width = '0%';
             document.getElementById('progressText').innerText = 'Initializing...';
             document.getElementById('processingSection').classList.add('hidden');
             document.getElementById('resultSection').classList.add('hidden');
             document.getElementById('downloadMenu').classList.remove('show');
-            dropZone.classList.remove('hidden');
+            document.getElementById('dropZone').classList.remove('hidden');
         }
     </script>
 </body>
