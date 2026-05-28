@@ -36,6 +36,15 @@
         .icon-box { display: inline-flex; position: relative; }
         .icon-box .main-icon { font-size: 1.8rem; }
         .icon-box .sub-icon { position: absolute; bottom: -4px; right: -8px; font-size: 0.8rem; background: white; border-radius: 50%; padding: 2px; }
+        
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .show-card {
+            display: block;
+            animation: popIn 0.3s ease forwards;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -44,8 +53,8 @@
         <div class="max-w-[1400px] mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-8">
-                    <a href="#" class="flex items-center gap-2">
-                        <i class="fas fa-heart text-brandRed text-2xl"></i>
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                        <img src="ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-11 w-auto object-contain transform scale-110 origin-left">
                         <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
                     </a>
                     
@@ -80,102 +89,92 @@
                 Every tool you need to use PDFs, manage numbers, and Indian utilities, at your fingertips. All are 100% FREE and easy to use! Merge, split, compress, and convert with just a few clicks.
             </p>
             
-            <div class="flex flex-wrap justify-center gap-2 mb-10">
-                <button class="bg-gray-800 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-sm">All</button>
-                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Workflows</button>
-                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Indian Spec</button>
-                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Image Tools</button>
-                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">AI Tools</button>
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="categoryFilters">
+                <button onclick="filterTools('all', this)" class="filter-btn active bg-gray-800 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition">All</button>
+                <button onclick="filterTools('pdf', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">PDF Tools</button>
+                <button onclick="filterTools('image', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Image & Media</button>
+                <button onclick="filterTools('ai', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">AI Tools</button>
+                <button onclick="filterTools('utilities', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Utilities</button>
             </div>
         </div>
 
-        <div class="max-w-[1300px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div class="max-w-[1300px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" id="toolsGrid">
             
-            <a href="tools/merge-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/merge-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#e5322d] mb-4">
-                    <i class="fas fa-file-pdf main-icon"></i>
-                    <i class="fas fa-compress-arrows-alt sub-icon text-[#e5322d]"></i>
+                    <i class="fas fa-file-pdf main-icon"></i><i class="fas fa-compress-arrows-alt sub-icon text-[#e5322d]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Merge PDF</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Combine PDFs in the order you want with the easiest PDF merger available.</p>
             </a>
 
-            <a href="tools/split-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/split-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#f0714b] mb-4">
-                    <i class="fas fa-file-pdf main-icon"></i>
-                    <i class="fas fa-cut sub-icon text-[#f0714b]"></i>
+                    <i class="fas fa-file-pdf main-icon"></i><i class="fas fa-cut sub-icon text-[#f0714b]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Split PDF</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Separate one page or a whole set for easy conversion into independent PDF files.</p>
             </a>
 
-            <a href="tools/compress-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/compress-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#4bbb56] mb-4">
-                    <i class="fas fa-file-pdf main-icon"></i>
-                    <i class="fas fa-compress sub-icon text-[#4bbb56]"></i>
+                    <i class="fas fa-file-pdf main-icon"></i><i class="fas fa-compress sub-icon text-[#4bbb56]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Compress PDF</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Reduce file size while optimizing for maximal PDF quality.</p>
             </a>
 
-            <a href="tools/word-to-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/word-to-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#3c78d8] mb-4">
-                    <i class="fas fa-file-word main-icon"></i>
-                    <i class="fas fa-arrow-right sub-icon text-[#3c78d8]"></i>
+                    <i class="fas fa-file-word main-icon"></i><i class="fas fa-arrow-right sub-icon text-[#3c78d8]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Word to PDF</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Make DOC and DOCX files easy to read by converting them to PDF.</p>
             </a>
 
-            <a href="tools/ppt-to-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/ppt-to-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#ff8e36] mb-4">
-                    <i class="fas fa-file-powerpoint main-icon"></i>
-                    <i class="fas fa-arrow-right sub-icon text-[#ff8e36]"></i>
+                    <i class="fas fa-file-powerpoint main-icon"></i><i class="fas fa-arrow-right sub-icon text-[#ff8e36]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">PowerPoint to PDF</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Make PPT and PPTX slideshows easy to view by converting them to PDF.</p>
             </a>
 
-            <a href="tools/aadhaar-resize.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/aadhaar-resize.html" data-category="utilities" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#f0ad4e] mb-4">
-                    <i class="fas fa-id-card main-icon"></i>
-                    <i class="fas fa-crop sub-icon text-[#f0ad4e]"></i>
+                    <i class="fas fa-id-card main-icon"></i><i class="fas fa-crop sub-icon text-[#f0ad4e]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Aadhaar Resize</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Auto crop & compress your documents to exact government specifications.</p>
             </a>
 
-            <a href="tools/number-to-words.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/number-to-words.html" data-category="utilities" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#5bc0de] mb-4">
-                    <i class="fas fa-rupee-sign main-icon"></i>
-                    <i class="fas fa-font sub-icon text-[#5bc0de]"></i>
+                    <i class="fas fa-rupee-sign main-icon"></i><i class="fas fa-font sub-icon text-[#5bc0de]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Number to Words</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Convert numbers to text in English, Gujarati, and Hindi with Indian format.</p>
             </a>
 
-           <a href="tools/font-converter.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+           <a href="tools/font-converter.html" data-category="utilities" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#20c997] mb-4">
-                    <i class="fas fa-globe-asia main-icon"></i>
-                    <i class="fas fa-language sub-icon text-[#20c997]"></i>
+                    <i class="fas fa-globe-asia main-icon"></i><i class="fas fa-language sub-icon text-[#20c997]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Universal Translator</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Auto-detect and translate text between 100+ worldwide languages instantly.</p>
             </a>
             
-            <a href="tools/remove-bg.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/remove-bg.html" data-category="image" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#9c27b0] mb-4">
-                    <i class="fas fa-image main-icon"></i>
-                    <i class="fas fa-eraser sub-icon text-[#9c27b0]"></i>
+                    <i class="fas fa-image main-icon"></i><i class="fas fa-eraser sub-icon text-[#9c27b0]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">Remove Background</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Remove backgrounds from images instantly with high-precision AI.</p>
             </a>
 
-            <a href="tools/pdf-to-jpg.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+            <a href="tools/pdf-to-jpg.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#f1c40f] mb-4">
-                    <i class="fas fa-file-pdf main-icon"></i>
-                    <i class="fas fa-image sub-icon text-[#f1c40f]"></i>
+                    <i class="fas fa-file-pdf main-icon"></i><i class="fas fa-image sub-icon text-[#f1c40f]"></i>
                 </div>
                 <h3 class="font-bold text-[17px] text-gray-900 mb-2">PDF to JPG</h3>
                 <p class="text-[13px] text-gray-500 leading-relaxed">Convert each PDF page into a JPG or extract all images contained in a PDF.</p>
@@ -184,16 +183,143 @@
         </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 mt-auto py-8">
-        <div class="max-w-[1300px] mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-gray-500 text-[13px]">
-            <p>&copy; 2026 ToolMitra. All rights reserved.</p>
-            <div class="space-x-4 mt-4 md:mt-0">
-                <a href="#" class="hover:text-brandRed">Terms of Use</a>
-                <a href="#" class="hover:text-brandRed">Privacy Policy</a>
-                <a href="#" class="hover:text-brandRed">Contact us</a>
+    <section class="max-w-6xl mx-auto py-16 px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Work your way</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <i class="fas fa-desktop text-3xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Work offline with Desktop</h3>
+                <p class="text-gray-500 text-sm">Batch edit and manage documents locally, with no internet and no limits.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <i class="fas fa-mobile-alt text-3xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">On-the-go with Mobile</h3>
+                <p class="text-gray-500 text-sm">Your favorite tools, right in your pocket. Keep working on your projects anytime, anywhere.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-lg transition">
+                <i class="fas fa-briefcase text-3xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Built for business</h3>
+                <p class="text-gray-500 text-sm">Automate document management, onboard teams easily, and scale with flexible plans.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto bg-green-50 rounded-3xl p-10 mt-8 mb-16 flex flex-col md:flex-row items-center gap-10 border border-green-100">
+        <div class="flex-1">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Everything is 100% FREE</h2>
+            <ul class="space-y-4 mb-8">
+                <li class="flex items-center gap-3 text-gray-700 text-sm font-semibold">
+                    <i class="fas fa-check-circle text-green-600"></i> No subscriptions, no hidden fees
+                </li>
+                <li class="flex items-center gap-3 text-gray-700 text-sm font-semibold">
+                    <i class="fas fa-check-circle text-green-600"></i> Unlimited access to all PDF & AI tools
+                </li>
+                <li class="flex items-center gap-3 text-gray-700 text-sm font-semibold">
+                    <i class="fas fa-check-circle text-green-600"></i> Always fast, secure, and easy to use
+                </li>
+            </ul>
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-gray-900 text-white font-bold px-8 py-4 rounded-xl hover:bg-black transition">Start Using Now</button>
+        </div>
+        <div class="flex-1 text-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Trusted by thousands of users</h3>
+            <p class="text-gray-500 text-sm">ToolMitra is your number one web app for editing PDF and managing files with ease. Enjoy all the tools you need to work efficiently while keeping your data safe.</p>
+        </div>
+    </section>
+
+    <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
+        <div class="max-w-[1300px] mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">PRODUCT</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+                        <li><a href="index.html" class="hover:text-white transition">Tools</a></li>
+                        <li><a href="#" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">RESOURCES</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="tools/desktop.html" class="hover:text-white transition">ToolMitra Desktop</a></li>
+                        <li><a href="tools/mobile.html" class="hover:text-white transition">ToolMitra Mobile</a></li>
+                        <li><a href="#" class="hover:text-white transition">Developers</a></li>
+                        <li><a href="#" class="hover:text-white transition">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">SOLUTIONS</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Business</a></li>
+                        <li><a href="#" class="hover:text-white transition">Education</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">LEGAL</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Security</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms & conditions</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cookies</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">COMPANY</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-white transition">About us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-8 justify-end">
+                <a href="#" class="bg-[#2d3035] hover:bg-[#3d4148] text-white px-4 py-2 rounded text-xs flex items-center gap-2 transition"><i class="fab fa-google-play text-lg"></i> Google Play</a>
+                <a href="#" class="bg-[#2d3035] hover:bg-[#3d4148] text-white px-4 py-2 rounded text-xs flex items-center gap-2 transition"><i class="fab fa-apple text-lg"></i> App Store</a>
+                <a href="#" class="bg-[#2d3035] hover:bg-[#3d4148] text-white px-4 py-2 rounded text-xs flex items-center gap-2 transition"><i class="fab fa-apple text-lg"></i> Mac App Store</a>
+                <a href="#" class="bg-[#2d3035] hover:bg-[#3d4148] text-white px-4 py-2 rounded text-xs flex items-center gap-2 transition"><i class="fab fa-windows text-lg"></i> Microsoft Store</a>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-6">
+                    <button class="flex items-center gap-2 border border-gray-600 px-3 py-1 rounded text-sm hover:text-white transition text-gray-400">
+                        <i class="fas fa-globe"></i> English <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="flex gap-5 text-lg text-gray-400">
+                        <a href="#" class="hover:text-white transition"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <p class="text-sm">© 2026 ToolMitra - Your Digital Toolbox</p>
             </div>
         </div>
     </footer>
 
+    <script>
+        function filterTools(category, clickedBtn) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.className = "filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition";
+            });
+            clickedBtn.className = "filter-btn active bg-gray-800 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition";
+
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                card.classList.remove('show-card');
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.classList.add('show-card');
+                    }, 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
