@@ -16,16 +16,6 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ToolMitra HD Background Remover",
-      "description": "An advanced, browser-based AI tool to remove backgrounds from images in high definition (4K) without losing quality.",
-      "applicationCategory": "DesignApplication"
-    }
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -59,9 +49,6 @@
                 <a href="remove-bg.html" class="text-brandPurple border-b-2 border-brandPurple pb-1">REMOVE BG</a>
                 <a href="../index.html" class="hover:text-brandRed transition">ALL TOOLS</a>
             </div>
-            <div class="flex items-center ml-auto lg:ml-0">
-                <a href="#" class="bg-brandPurple hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">Sign up</a>
-            </div>
         </nav>
     </header>
 
@@ -73,13 +60,13 @@
         </div>
 
         <section id="uploadSection" class="max-w-4xl mx-auto mb-16">
-            <div id="dropZone" class="bg-purple-50 border-2 border-dashed border-brandPurple rounded-3xl p-10 md:p-20 transition cursor-pointer flex flex-col items-center justify-center min-h-[350px] shadow-sm hover:bg-purple-100">
+            <div id="dropZone" onclick="document.getElementById('fileInput').click()" class="bg-purple-50 border-2 border-dashed border-brandPurple rounded-3xl p-10 md:p-20 transition cursor-pointer flex flex-col items-center justify-center min-h-[350px] shadow-sm hover:bg-purple-100">
                 <i class="fas fa-image text-6xl text-brandPurple mb-6"></i>
                 <button class="bg-brandPurple hover:bg-purple-700 text-white font-bold text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:scale-105 mb-4 pointer-events-none">
                     Upload Image
                 </button>
-                <p class="text-gray-600 font-medium">or drop an image here</p>
-                <p class="text-xs text-gray-400 mt-2">Supports JPG, PNG, WEBP</p>
+                <p class="text-gray-600 font-medium pointer-events-none">or drop an image here</p>
+                <p class="text-xs text-gray-400 mt-2 pointer-events-none">Supports JPG, PNG, WEBP</p>
                 <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" class="hidden">
             </div>
         </section>
@@ -99,7 +86,6 @@
                 </div>
 
                 <div id="resultArea" class="hidden grid md:grid-cols-2 gap-8 items-center">
-                    
                     <div class="relative rounded-2xl overflow-hidden shadow-inner border border-gray-200 transparent-bg aspect-square md:aspect-auto md:h-[400px] flex items-center justify-center">
                         <img id="resultImage" class="max-w-full max-h-full object-contain drop-shadow-2xl" src="" alt="Removed Background">
                         <div class="absolute top-4 left-4 bg-white px-3 py-1 rounded-full shadow text-xs font-bold text-gray-700">
@@ -133,24 +119,6 @@
                 </div>
             </div>
         </section>
-
-        <article class="max-w-5xl mx-auto bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm mb-16">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Canva-Level HD Quality</h2>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Most free background removers shrink your image and ruin the quality. ToolMitra uses a state-of-the-art AI model that preserves your original 4K/HD resolution perfectly.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <i class="fas fa-shield-check text-2xl text-brandPurple mt-1"></i>
-                        <div>
-                            <h3 class="font-bold text-gray-900">100% Private (No Servers)</h3>
-                            <p class="text-sm text-gray-500 mt-1">Your photo never leaves your phone or computer. Our powerful AI runs completely offline inside your web browser.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
     </main>
 
     <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
@@ -159,40 +127,40 @@
         </div>
     </footer>
 
-    <script type="module">
-        // Importing exactly from the most stable CDN endpoint (ESM format)
-        import imglyRemoveBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm";
-
+    <script>
         const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
         const uploadSection = document.getElementById('uploadSection'), workspace = document.getElementById('workspace');
         const loadingArea = document.getElementById('loadingArea'), resultArea = document.getElementById('resultArea');
         const resultImage = document.getElementById('resultImage'), downloadBtn = document.getElementById('downloadBtn');
         const loadingStatus = document.getElementById('loadingStatus');
 
-        // Upload Listeners
-        dropZone.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+        // Normal Drag and Drop Listeners
+        fileInput.onchange = (e) => { if(e.target.files.length > 0) handleFile(e.target.files[0]); };
         dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('bg-purple-100'); };
         dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); };
-        dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); handleFile(e.dataTransfer.files[0]); };
+        dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); if(e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]); };
 
         async function handleFile(file) {
             if(!file || !file.type.startsWith('image/')) { alert("Please upload a valid image file (JPG, PNG)."); return; }
             
+            // Immediately show loading screen
             uploadSection.classList.add('hidden');
             workspace.classList.remove('hidden');
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
 
             try {
-                // Read original dimensions just for display
+                // Show resolution badge
                 const imgTemp = new Image();
                 imgTemp.src = URL.createObjectURL(file);
                 imgTemp.onload = () => { document.getElementById('resBadge').innerText = `${imgTemp.width} x ${imgTemp.height} px`; };
 
-                loadingStatus.innerText = "Connecting to Local AI Engine...";
+                loadingStatus.innerText = "Loading AI Engine (Takes a few seconds)...";
 
-                // Model Configuration
+                // DYNAMIC IMPORT: AI only loads AFTER the image is uploaded!
+                const imglyModule = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm");
+                const imglyRemoveBackground = imglyModule.default;
+
                 const config = {
                     publicPath: "https://unpkg.com/@imgly/background-removal@1.4.5/dist/",
                     progress: (key, current, total) => {
@@ -205,7 +173,7 @@
                     }
                 };
 
-                // MAGIC HAPPENS HERE: AI Background Removal
+                // Remove Background
                 const imageBlob = await imglyRemoveBackground(file, config);
                 
                 // Show Result
@@ -226,7 +194,7 @@
 
             } catch (error) {
                 console.error("AI Error:", error);
-                alert(`Something went wrong. Please check your internet connection and try again.`);
+                alert(`AI Processing failed. Please check your internet connection and try again.`);
                 location.reload();
             }
         }
