@@ -1,300 +1,458 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Merge PDF Files Online for Free - Combine PDFs | ToolMitra</title>
-    <meta name="description" content="Combine multiple PDF files into one single document for free. Easiest online PDF merger. No watermarks, no installation, and 100% secure. Try ToolMitra now.">
-    <meta name="keywords" content="merge pdf, combine pdf files, free online pdf merger, join pdfs, pdf binder, ToolMitra pdf">
-    <meta name="author" content="MihirSync">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/merge-pdf.html" />
+/* =========================
+   TOOLMITRA MERGE PDF CSS
+========================= */
 
-    <meta property="og:title" content="Merge PDF Files Online for Free | ToolMitra">
-    <meta property="og:description" content="Join and combine multiple PDF files into one document instantly. 100% Free and Secure.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ToolMitra Merge PDF",
-      "url": "https://mihirsync.github.io/ToolMitra/tools/merge-pdf.html",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "All",
-      "description": "A free, cloud-based tool to combine and merge multiple PDF documents into a single file quickly and securely without any watermarks.",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#f5f7fb;
+    color:#1f2937;
+    min-height:100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    width:100%;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.navbar{
+    max-width:1400px;
+    margin:auto;
+    padding:18px 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo img{
+    width:45px;
+}
+
+.logo h1{
+    font-size:28px;
+    font-weight:800;
+    color:#111827;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#4b5563;
+    font-size:14px;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:#e5322d;
+}
+
+.nav-btn{
+    background:#e5322d;
+    color:#fff;
+    padding:12px 22px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.nav-btn:hover{
+    background:#c81f1a;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero{
+    max-width:1200px;
+    margin:auto;
+    padding:80px 20px;
+    text-align:center;
+}
+
+.hero h2{
+    font-size:58px;
+    font-weight:800;
+    margin-bottom:20px;
+    color:#111827;
+}
+
+.hero p{
+    max-width:750px;
+    margin:auto;
+    font-size:20px;
+    color:#6b7280;
+    line-height:1.7;
+}
+
+/* =========================
+   UPLOAD BOX
+========================= */
+
+.upload-box{
+    margin-top:50px;
+    background:#fff;
+    border:3px dashed #e5322d;
+    border-radius:35px;
+    padding:70px 30px;
+    transition:0.3s;
+    cursor:pointer;
+    box-shadow:0 15px 40px rgba(0,0,0,0.06);
+}
+
+.upload-box:hover{
+    transform:translateY(-5px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.08);
+}
+
+.upload-icon{
+    font-size:80px;
+    color:#e5322d;
+    margin-bottom:25px;
+}
+
+.upload-btn{
+    display:inline-block;
+    background:#e5322d;
+    color:#fff;
+    padding:20px 45px;
+    border-radius:18px;
+    font-size:22px;
+    font-weight:800;
+    border:none;
+    cursor:pointer;
+    transition:0.3s;
+    margin-bottom:20px;
+}
+
+.upload-btn:hover{
+    background:#c81f1a;
+    transform:scale(1.05);
+}
+
+.upload-text{
+    color:#6b7280;
+    font-size:16px;
+    font-weight:500;
+}
+
+/* =========================
+   FILE LIST
+========================= */
+
+.file-container{
+    margin-top:35px;
+    background:#fff;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+.file-container h3{
+    font-size:24px;
+    margin-bottom:25px;
+    color:#111827;
+}
+
+.file-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    margin-bottom:15px;
+    background:#fafafa;
+}
+
+.file-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.file-left i{
+    color:#e5322d;
+    font-size:28px;
+}
+
+.file-name{
+    font-size:15px;
+    font-weight:600;
+    color:#374151;
+}
+
+.remove-btn{
+    background:none;
+    border:none;
+    color:#9ca3af;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.remove-btn:hover{
+    color:#ef4444;
+}
+
+/* =========================
+   MERGE BUTTON
+========================= */
+
+.merge-btn{
+    width:100%;
+    margin-top:25px;
+    background:#e5322d;
+    color:#fff;
+    border:none;
+    padding:20px;
+    border-radius:18px;
+    font-size:22px;
+    font-weight:800;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 10px 30px rgba(229,50,45,0.3);
+}
+
+.merge-btn:hover{
+    background:#c81f1a;
+    transform:translateY(-3px);
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+
+.progress-wrapper{
+    width:100%;
+    height:14px;
+    background:#e5e7eb;
+    border-radius:50px;
+    margin-top:25px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:#e5322d;
+    border-radius:50px;
+    transition:0.4s;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.features{
+    max-width:1200px;
+    margin:80px auto;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+}
+
+.feature-card{
+    background:#fff;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+    transition:0.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-5px);
+}
+
+.feature-card i{
+    font-size:45px;
+    color:#e5322d;
+    margin-bottom:20px;
+}
+
+.feature-card h4{
+    font-size:24px;
+    margin-bottom:15px;
+}
+
+.feature-card p{
+    color:#6b7280;
+    line-height:1.7;
+}
+
+/* =========================
+   FAQ
+========================= */
+
+.faq{
+    max-width:1000px;
+    margin:100px auto;
+    padding:0 20px;
+}
+
+.faq h2{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:50px;
+}
+
+.faq-item{
+    background:#fff;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+.faq-item h3{
+    font-size:20px;
+    margin-bottom:12px;
+}
+
+.faq-item p{
+    color:#6b7280;
+    line-height:1.7;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    background:#111827;
+    color:#9ca3af;
+    margin-top:100px;
+    padding:60px 20px;
+    text-align:center;
+}
+
+footer h2{
+    color:#fff;
+    margin-bottom:15px;
+    font-size:32px;
+}
+
+footer p{
+    font-size:15px;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark{
+    background:#0f172a;
+    color:#fff;
+}
+
+body.dark header,
+body.dark .upload-box,
+body.dark .file-container,
+body.dark .feature-card,
+body.dark .faq-item{
+    background:#1e293b;
+    color:#fff;
+}
+
+body.dark .hero p,
+body.dark .feature-card p,
+body.dark .faq-item p{
+    color:#cbd5e1;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:992px){
+
+    .hero h2{
+        font-size:44px;
     }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to merge PDF files online",
-      "step": [
-        { "@type": "HowToStep", "text": "Click the 'Select PDF files' button or drag and drop your PDFs into the upload area." },
-        { "@type": "HowToStep", "text": "Rearrange the files in the exact order you want them to appear." },
-        { "@type": "HowToStep", "text": "Click the 'Merge PDF' button to combine your files and download the final PDF." }
-      ]
+
+    .navbar{
+        flex-direction:column;
+        gap:20px;
     }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "Is ToolMitra Merge PDF completely free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes, our PDF merger is 100% free to use with no hidden charges and no watermarks added to your files." }
-      }, {
-        "@type": "Question",
-        "name": "Are my PDF files safe and secure?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. All uploaded and merged files are processed safely in your browser." }
-      }]
+
+    .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
     }
-    </script>
+}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+@media(max-width:768px){
 
-    <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandRed: '#e5322d' } } } } </script>
-    <style> body { background-color: #f8f9fa; color: #333333; } </style>
-</head>
-<body class="antialiased min-h-screen flex flex-col">
+    .hero{
+        padding:60px 20px;
+    }
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <nav class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
-            
-            <div class="flex items-center gap-4 md:gap-8">
-                <a href="../index.html" class="flex items-center gap-2 text-gray-500 hover:text-brandRed transition font-bold text-sm">
-                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
-                </a>
+    .hero h2{
+        font-size:36px;
+    }
 
-                <a href="../index.html" class="flex items-center gap-2">
-                    <img src="../ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-11 w-auto object-contain">
-                    <span class="font-bold text-2xl text-gray-900">ToolMitra</span>
-                </a>
-            </div>
+    .hero p{
+        font-size:17px;
+    }
 
-            <div class="hidden lg:flex space-x-8 text-[13px] font-bold text-gray-700 tracking-wide items-center">
-                <a href="merge-pdf.html" class="text-brandRed border-b-2 border-brandRed pb-1">MERGE PDF</a>
-                <a href="split-pdf.html" class="hover:text-brandRed transition">SPLIT PDF</a>
-                <a href="compress-pdf.html" class="hover:text-brandRed transition">COMPRESS PDF</a>
-                <a href="../index.html" class="hover:text-brandRed transition">ALL TOOLS</a>
-            </div>
+    .upload-box{
+        padding:50px 20px;
+    }
 
-            <div class="flex items-center ml-auto lg:ml-0">
-                <a href="#" class="bg-brandRed hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">Sign up</a>
-            </div>
-        </nav>
-    </header>
+    .upload-btn{
+        width:100%;
+        font-size:18px;
+    }
 
-    <main class="flex-grow pt-12 pb-16 px-4">
-        
-        <section class="text-center max-w-4xl mx-auto mb-16">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
-                Merge PDF files
-            </h1>
-            <p class="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
-                Combine PDFs in the order you want with the easiest PDF merger available. 100% secure and free.
-            </p>
-            
-            <div id="dropZone" class="bg-[#e5322d] bg-opacity-10 border-2 border-dashed border-[#e5322d] rounded-3xl p-10 md:p-20 transition cursor-pointer flex flex-col items-center justify-center min-h-[320px] shadow-sm mb-6">
-                <i class="fas fa-file-pdf text-6xl text-[#e5322d] mb-6 drop-icon transition-transform"></i>
-                <button id="selectBtn" class="bg-[#e5322d] hover:bg-red-700 text-white font-bold text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:scale-105 mb-4 pointer-events-none">
-                    Select PDF files
-                </button>
-                <p class="text-gray-600 font-medium">or drop PDFs here</p>
-                <input type="file" id="fileInput" multiple accept="application/pdf" class="hidden">
-            </div>
+    .merge-btn{
+        font-size:18px;
+    }
+}
 
-            <div id="fileUI" class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hidden mb-6 text-left">
-                <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Selected Files:</h3>
-                <ul id="fileList" class="space-y-2 mb-6 max-h-60 overflow-y-auto"></ul>
-                <button id="mergeActionBtn" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold text-lg py-4 rounded-xl shadow-md transition transform hover:-translate-y-1">
-                    Merge PDFs Now <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-                <p id="statusMsg" class="text-center mt-3 text-sm font-bold text-gray-600 hidden"></p>
-            </div>
+@media(max-width:480px){
 
-            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-8 text-sm md:text-base text-gray-600 font-medium">
-                <div class="flex items-center gap-2"><span class="bg-gray-200 text-gray-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span> Upload files</div>
-                <i class="fas fa-chevron-right text-gray-300 hidden md:block"></i>
-                <div class="flex items-center gap-2"><span class="bg-gray-200 text-gray-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span> Arrange order</div>
-                <i class="fas fa-chevron-right text-gray-300 hidden md:block"></i>
-                <div class="flex items-center gap-2"><span class="bg-gray-200 text-gray-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span> Click Merge</div>
-            </div>
-        </section>
+    .hero h2{
+        font-size:30px;
+    }
 
-        <article class="max-w-5xl mx-auto bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm mb-16">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">The Best Free PDF Merger</h2>
-                    <p class="text-gray-600 mb-4 leading-relaxed">ToolMitra provides a seamless way to combine multiple PDF documents into a single file. Whether you are merging invoices, reports, or assignments, our tool ensures your layout and formatting remain perfectly intact.</p>
-                    <p class="text-gray-600 leading-relaxed">Unlike other platforms, we don't add frustrating watermarks to your files. You get professional-grade results right in your web browser.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <i class="fas fa-shield-check text-2xl text-green-500 mt-1"></i>
-                        <div><h3 class="font-bold text-gray-900">Total Security & Privacy</h3><p class="text-sm text-gray-500 mt-1">Files are merged securely right inside your browser.</p></div>
-                    </div>
-                    <div class="flex gap-4">
-                        <i class="fas fa-mobile-alt text-2xl text-purple-500 mt-1"></i>
-                        <div><h3 class="font-bold text-gray-900">Platform Independent</h3><p class="text-sm text-gray-500 mt-1">Works flawlessly on Windows, Mac, Linux, Android, and iOS devices.</p></div>
-                    </div>
-                </div>
-            </div>
-        </article>
+    .logo h1{
+        font-size:22px;
+    }
 
-    </main>
+    .upload-icon{
+        font-size:60px;
+    }
 
-    <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
-        <div class="max-w-[1300px] mx-auto px-4 text-center">
-            <p class="text-sm">© 2026 ToolMitra. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileUI = document.getElementById('fileUI');
-        const fileList = document.getElementById('fileList');
-        const mergeActionBtn = document.getElementById('mergeActionBtn');
-        const statusMsg = document.getElementById('statusMsg');
-
-        let selectedFiles = [];
-
-        // 1. CLICK TO UPLOAD
-        dropZone.addEventListener('click', () => fileInput.click());
-
-        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
-        // 2. DRAG AND DROP
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('bg-opacity-30', 'border-red-500');
-            dropZone.querySelector('.drop-icon').classList.add('scale-125');
-        });
-
-        dropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('bg-opacity-30', 'border-red-500');
-            dropZone.querySelector('.drop-icon').classList.remove('scale-125');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('bg-opacity-30', 'border-red-500');
-            dropZone.querySelector('.drop-icon').classList.remove('scale-125');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        // 3. HANDLE FILES & UPDATE UI
-        function handleFiles(files) {
-            const pdfs = Array.from(files).filter(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
-            
-            if(pdfs.length === 0) {
-                alert("Please select valid PDF files only.");
-                return;
-            }
-
-            selectedFiles = selectedFiles.concat(pdfs);
-            renderFileList();
-        }
-
-        function renderFileList() {
-            if(selectedFiles.length > 0) {
-                fileUI.classList.remove('hidden');
-                dropZone.classList.add('min-h-[150px]'); 
-            } else {
-                fileUI.classList.add('hidden');
-                dropZone.classList.remove('min-h-[150px]');
-            }
-
-            fileList.innerHTML = '';
-            selectedFiles.forEach((file, index) => {
-                const li = document.createElement('li');
-                li.className = "flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-100";
-                li.innerHTML = `
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <i class="fas fa-file-pdf text-brandRed text-xl"></i>
-                        <span class="text-sm font-medium text-gray-700 truncate">${file.name}</span>
-                    </div>
-                    <button onclick="removeFile(event, ${index})" class="text-gray-400 hover:text-red-500 transition px-2">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                fileList.appendChild(li);
-            });
-        }
-
-        window.removeFile = function(event, index) {
-            event.stopPropagation(); 
-            selectedFiles.splice(index, 1);
-            renderFileList();
-        }
-
-        // 4. ACTUAL PDF MERGE LOGIC (Using pdf-lib)
-        mergeActionBtn.addEventListener('click', async () => {
-            if(selectedFiles.length < 2) {
-                alert("Please select at least 2 PDF files to merge.");
-                return;
-            }
-
-            mergeActionBtn.disabled = true;
-            mergeActionBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Merging...';
-            statusMsg.classList.remove('hidden');
-            statusMsg.innerText = "Processing your files securely in browser...";
-            statusMsg.className = "text-center mt-3 text-sm font-bold text-blue-600";
-
-            try {
-                const { PDFDocument } = PDFLib;
-                const mergedPdf = await PDFDocument.create();
-
-                for (let file of selectedFiles) {
-                    const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await PDFDocument.load(arrayBuffer);
-                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                    copiedPages.forEach((page) => mergedPdf.addPage(page));
-                }
-
-                const mergedPdfFile = await mergedPdf.save();
-                const blob = new Blob([mergedPdfFile], { type: 'application/pdf' });
-                const url = URL.createObjectURL(blob);
-
-                // Auto Download
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'ToolMitra_Merged.pdf';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-
-                statusMsg.innerText = "Success! Your merged PDF is downloading.";
-                statusMsg.className = "text-center mt-3 text-sm font-bold text-green-600";
-                mergeActionBtn.innerHTML = 'Merge More PDFs <i class="fas fa-redo ml-2"></i>';
-                mergeActionBtn.disabled = false;
-                
-                // Clear array for next use after a delay
-                setTimeout(() => {
-                    selectedFiles = [];
-                    renderFileList();
-                    mergeActionBtn.innerHTML = 'Merge PDFs Now <i class="fas fa-arrow-right ml-2"></i>';
-                    statusMsg.classList.add('hidden');
-                }, 4000);
-
-            } catch (error) {
-                console.error(error);
-                statusMsg.innerText = "Oops! Something went wrong while merging.";
-                statusMsg.className = "text-center mt-3 text-sm font-bold text-red-600";
-                mergeActionBtn.innerHTML = 'Try Again';
-                mergeActionBtn.disabled = false;
-            }
-        });
-    </script>
-</body>
-</html>
+    .feature-card{
+        padding:25px;
+    }
+}
