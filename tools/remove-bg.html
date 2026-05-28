@@ -3,254 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Remove Background from Image Online for Free | ToolMitra</title>
-    <meta name="description" content="Fast, free, and automatic image background remover. Make any image background transparent instantly right in your browser. No signup required.">
-    <meta name="keywords" content="remove background, normal bg remover, fast background eraser, transparent background maker, free png maker, ToolMitra">
-    <meta name="author" content="MihirSync">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/remove-bg.html" />
-
-    <meta property="og:title" content="Fast Background Remover Online | ToolMitra">
-    <meta property="og:description" content="Erase backgrounds from your photos instantly for free. 100% private and processed locally on your device.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ToolMitra Fast Background Remover",
-      "description": "A highly optimized, fast browser-based tool to automatically remove backgrounds from images and create transparent PNGs.",
-      "applicationCategory": "DesignApplication",
-      "operatingSystem": "All",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
-    }
-    </script>
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to easily remove background from a photo",
-      "step": [
-        { "@type": "HowToStep", "text": "Click on 'Upload Image' and select your photo (JPG or PNG)." },
-        { "@type": "HowToStep", "text": "Wait a few seconds for our smart AI to automatically erase the background." },
-        { "@type": "HowToStep", "text": "Click 'Download Image' to save your new transparent PNG file." }
-      ]
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "Is this background remover completely free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes, ToolMitra offers a 100% free background removal tool with no hidden charges and no watermarks." }
-      }, {
-        "@type": "Question",
-        "name": "Is my photo safe and private?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Absolutely! We use local browser processing. Your photo is never uploaded to our servers; everything happens directly on your device." }
-      }]
-    }
-    </script>
-
+    <title>Remove Background - ToolMitra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <script src="https://unpkg.com/@imgly/background-removal@1.4.5/dist/browser/bundle.umd.min.js"></script>
-
-    <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandPurple: '#8b5cf6', brandRed: '#e5322d', brandOrange: '#f0714b', brandGreen: '#4bbb56', brandYellow: '#f59e0b' } } } } </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brandPurple: '#9c27b0' }
+                }
+            }
+        }
+    </script>
     <style>
         body { background-color: #f8f9fa; color: #333333; }
-        .transparent-bg {
-            background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+        .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
+        .upload-area.dragover { border-color: #9c27b0; background-color: #faf5fb; }
+        .checkerboard {
+            background-color: #e5e5f7;
+            opacity: 1;
+            background-image:  linear-gradient(45deg, #d1d5db 25%, transparent 25%, transparent 75%, #d1d5db 75%, #d1d5db), linear-gradient(45deg, #d1d5db 25%, transparent 25%, transparent 75%, #d1d5db 75%, #d1d5db);
             background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-position: 0 0, 10px 10px;
         }
+        .dropdown-menu { display: none; opacity: 0; transition: opacity 0.2s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <nav class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-4 md:gap-8">
-                <a href="../index.html" class="flex items-center gap-2 text-gray-500 hover:text-brandPurple transition font-bold text-sm">
-                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
-                </a>
-                <a href="../index.html" class="flex items-center gap-2">
-                    <img src="../ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-11 w-auto object-contain">
-                    <span class="font-bold text-2xl text-gray-900">ToolMitra</span>
-                </a>
-            </div>
-            <div class="hidden lg:flex space-x-8 text-[13px] font-bold text-gray-700 tracking-wide items-center">
-                <a href="merge-pdf.html" class="hover:text-brandRed transition">MERGE PDF</a>
-                <a href="split-pdf.html" class="hover:text-brandOrange transition">SPLIT PDF</a>
-                <a href="remove-bg.html" class="text-brandPurple border-b-2 border-brandPurple pb-1">REMOVE BG</a>
-                <a href="../index.html" class="hover:text-brandRed transition">ALL TOOLS</a>
-            </div>
-            <div class="flex items-center ml-auto lg:ml-0">
-                <a href="#" class="bg-brandPurple hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">Sign up</a>
-            </div>
-        </nav>
-    </header>
-
-    <main class="flex-grow pt-12 pb-16 px-4">
-        
-        <div class="text-center max-w-4xl mx-auto mb-10">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">Remove Image Background</h1>
-            <p class="text-lg text-gray-500 max-w-2xl mx-auto">Make any image background transparent instantly. Fast, 100% free, and completely secure.</p>
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fas fa-heart text-[#e5322d] text-2xl"></i>
+                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+            </a>
+            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-brandPurple flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
         </div>
+    </nav>
 
-        <section id="uploadSection" class="max-w-4xl mx-auto mb-16">
-            <div id="dropZone" onclick="document.getElementById('fileInput').click()" class="bg-purple-50 border-2 border-dashed border-brandPurple rounded-3xl p-10 md:p-20 transition cursor-pointer flex flex-col items-center justify-center min-h-[350px] shadow-sm hover:bg-purple-100">
-                <i class="fas fa-image text-6xl text-brandPurple mb-6"></i>
-                <button class="bg-brandPurple hover:bg-purple-700 text-white font-bold text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:scale-105 mb-4 pointer-events-none">
-                    Upload Image
-                </button>
-                <p class="text-gray-600 font-medium pointer-events-none">or drop an image here</p>
-                <p class="text-xs text-gray-400 mt-2 pointer-events-none">Supports JPG, PNG, WEBP</p>
-                <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" class="hidden">
+    <div class="bg-purple-50 border-b border-purple-100 pt-10 pb-8">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <div class="w-16 h-16 mx-auto bg-white text-brandPurple rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm border border-purple-100">
+                <i class="fas fa-eraser"></i>
             </div>
-        </section>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Remove Image Background</h1>
+            <p class="text-gray-600 text-[16px]">Use our HD AI model to erase backgrounds instantly, 100% free and securely on your browser.</p>
+        </div>
+    </div>
 
-        <section id="workspace" class="hidden max-w-6xl mx-auto mb-16">
-            <div class="bg-white p-6 md:p-10 rounded-3xl shadow-lg border border-gray-100">
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Upload an Image</h3>
+                <p class="text-gray-500 text-sm mb-6">Supports JPG, PNG in High Resolution</p>
+                <button class="bg-brandPurple hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-md">
+                    Select Image
+                </button>
+                <input type="file" id="fileInput" class="hidden" accept="image/*">
+            </div>
+
+            <div id="processingSection" class="hidden mt-8 text-center bg-white p-10 rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto">
+                <div class="relative w-24 h-24 mx-auto mb-6">
+                    <i class="fas fa-robot text-5xl text-brandPurple absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                    <svg class="animate-spin w-full h-full text-purple-200" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                        <path class="opacity-75" fill="#9c27b0" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2" id="processTitle">AI is working its magic...</h3>
+                <p class="text-gray-500 mb-4" id="processDesc">Please wait while we extract the main subject.</p>
                 
-                <div id="loadingArea" class="flex flex-col items-center justify-center py-16 text-center">
-                    <div class="relative w-24 h-24 mb-6">
-                        <div class="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
-                        <div class="absolute inset-0 border-4 border-brandPurple rounded-full border-t-transparent animate-spin"></div>
-                        <i class="fas fa-bolt text-2xl text-brandPurple absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Processing Image...</h3>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                    <div id="progressBar" class="bg-brandPurple h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p class="text-xs text-brandPurple font-bold" id="progressText">Downloading AI Model (First time takes longer)...</p>
+            </div>
+
+            <div id="resultSection" class="hidden mt-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                     
-                    <div class="w-full max-w-md bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
-                        <div id="progressBar" class="bg-brandPurple h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    <div class="flex flex-col items-center">
+                        <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm tracking-wider">Original</h3>
+                        <div class="w-full h-80 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center p-2">
+                            <img id="originalImg" class="max-w-full max-h-full object-contain" src="" alt="Original">
+                        </div>
                     </div>
-                    <p id="loadingStatus" class="text-sm font-bold text-brandPurple">0%</p>
-                    
-                    <p class="text-xs text-gray-400 mt-6"><i class="fas fa-shield-alt text-brandPurple"></i> Processed securely inside your browser</p>
+
+                    <div class="flex flex-col items-center">
+                        <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm tracking-wider text-brandPurple">Background Removed</h3>
+                        <div class="w-full h-80 rounded-lg overflow-hidden border border-gray-200 checkerboard flex items-center justify-center p-2 relative">
+                            <img id="transparentImg" class="max-w-full max-h-full object-contain drop-shadow-xl" src="" alt="Transparent">
+                        </div>
+                    </div>
+
                 </div>
 
-                <div id="resultArea" class="hidden grid md:grid-cols-2 gap-8 items-center">
-                    <div class="relative rounded-2xl overflow-hidden shadow-inner border border-gray-200 transparent-bg aspect-square md:aspect-auto md:h-[400px] flex items-center justify-center p-4">
-                        <img id="resultImage" class="max-w-full max-h-full object-contain drop-shadow-lg" src="" alt="Removed Background">
-                    </div>
-
-                    <div class="flex flex-col justify-center">
-                        <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Background Removed!</h2>
-                        <p class="text-gray-600 mb-8">Your image is ready. The background has been successfully made transparent.</p>
-
-                        <button id="downloadBtn" class="w-full bg-brandPurple hover:bg-purple-700 text-white font-bold text-xl px-8 py-5 rounded-xl shadow-lg transition transform hover:-translate-y-1 mb-4 flex items-center justify-center gap-3">
-                            <i class="fas fa-download"></i> Download Image
+                <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button onclick="window.resetTool()" class="bg-white border-2 border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 rounded-full transition-colors text-lg">
+                        Upload Another
+                    </button>
+                    
+                    <div class="relative inline-block text-left">
+                        <button onclick="window.toggleDownloadMenu()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors text-lg shadow-lg flex items-center justify-center gap-2">
+                            Download <i class="fas fa-chevron-down text-sm ml-1"></i>
                         </button>
                         
-                        <button onclick="location.reload()" class="w-full bg-white border-2 border-gray-200 hover:bg-gray-50 text-gray-600 font-bold text-lg px-8 py-4 rounded-xl transition">
-                            Upload Another Image
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <article class="max-w-5xl mx-auto bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm mb-16">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Fast & Easy Background Remover</h2>
-                    <p class="text-gray-600 mb-4 leading-relaxed">No need to use complicated software like Photoshop. ToolMitra uses a highly optimized, lightweight AI model that separates the foreground from the background in seconds.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <i class="fas fa-shield-check text-2xl text-brandPurple mt-1"></i>
-                        <div>
-                            <h3 class="font-bold text-gray-900">100% Private (No Servers)</h3>
-                            <p class="text-sm text-gray-500 mt-1">Your photo never leaves your phone or computer. Everything runs completely offline inside your web browser.</p>
+                        <div id="downloadMenu" class="dropdown-menu absolute right-0 bottom-full mb-2 w-72 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-hidden">
+                            <div onclick="window.downloadImage('standard')" class="cursor-pointer hover:bg-gray-50 p-4 border-b border-gray-100 flex items-center justify-between group">
+                                <div>
+                                    <h4 class="text-gray-800 font-bold text-base flex items-center gap-2"><i class="fas fa-eye text-gray-400 group-hover:text-blue-500"></i> Preview Image</h4>
+                                    <p class="text-gray-500 text-xs mt-1">Resized to max 500x500 px</p>
+                                </div>
+                                <span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-600 transition">Free</span>
+                            </div>
+                            
+                            <div onclick="window.downloadImage('hd')" class="cursor-pointer hover:bg-purple-50 p-4 flex items-center justify-between group bg-purple-50/30">
+                                <div>
+                                    <h4 class="text-purple-800 font-bold text-base flex items-center gap-2"><i class="fas fa-bolt text-yellow-500"></i> HD Quality (Max)</h4>
+                                    <p class="text-gray-500 text-xs mt-1" id="hdResolutionTxt">Original Resolution</p>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-yellow-200 group-hover:bg-yellow-400 group-hover:text-white transition">100% Free</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </article>
+
+        </div>
     </main>
 
-    <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
-        <div class="max-w-[1300px] mx-auto px-4 text-center">
-            <p class="text-sm">© 2026 ToolMitra. Built for speed and privacy.</p>
-        </div>
-    </footer>
+    <script type="module">
+        // Import directly from the CDN as a module (Version 1.7.0 is much faster and stable)
+        import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm";
 
-    <script>
-        const fileInput = document.getElementById('fileInput');
-        const uploadSection = document.getElementById('uploadSection'), workspace = document.getElementById('workspace');
-        const loadingArea = document.getElementById('loadingArea'), resultArea = document.getElementById('resultArea');
-        const resultImage = document.getElementById('resultImage'), downloadBtn = document.getElementById('downloadBtn');
-        const loadingStatus = document.getElementById('loadingStatus'), progressBar = document.getElementById('progressBar');
-
-        fileInput.onchange = (e) => { if(e.target.files.length > 0) handleFile(e.target.files[0]); };
+        // Bind global variables
+        window.currentFile = null;
+        window.currentResultUrl = null;
+        window.originalWidth = 0;
+        window.originalHeight = 0;
         
-        // Drag and Drop
         const dropZone = document.getElementById('dropZone');
-        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('bg-purple-100'); };
-        dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); };
-        dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); if(e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]); };
+        const fileInput = document.getElementById('fileInput');
 
-        async function handleFile(file) {
-            if(!file || !file.type.startsWith('image/')) { alert("Please upload a valid image file (JPG, PNG)."); return; }
-            
-            // Basic Safety Check
-            if (typeof imglyRemoveBackground === 'undefined') {
-                alert("Library is still loading in the background. Please wait 2 seconds and click again!");
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            window.handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => window.handleFile(e.target.files[0]));
+
+        window.handleFile = function(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                alert("Please upload a valid image file.");
                 return;
             }
 
-            uploadSection.classList.add('hidden');
-            workspace.classList.remove('hidden');
-            loadingArea.classList.remove('hidden');
-            resultArea.classList.add('hidden');
+            window.currentFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    window.originalWidth = img.width;
+                    window.originalHeight = img.height;
+                    document.getElementById('hdResolutionTxt').innerText = `${window.originalWidth} x ${window.originalHeight} px`;
+                }
+                img.src = e.target.result;
+                document.getElementById('originalImg').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+
+            dropZone.classList.add('hidden');
+            document.getElementById('processingSection').classList.remove('hidden');
+            
+            window.processBackgroundRemoval();
+        }
+
+        window.processBackgroundRemoval = async function() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const config = {
+                // By not setting publicPath, it uses imgly's optimized high-speed WebAssembly servers
+                progress: (key, current, total) => {
+                    let percent = Math.round((current / total) * 100);
+                    if(percent > 100) percent = 100;
+                    
+                    progressBar.style.width = percent + '%';
+                    
+                    if(key.includes('fetch')) {
+                        progressText.innerText = `Downloading AI Models (${percent}%)...`;
+                    } else if(key.includes('compute')) {
+                        progressText.innerText = `Extracting Subject perfectly (${percent}%)...`;
+                    }
+                }
+            };
 
             try {
-                // THE SECRET: Using the "small" model which is extremely fast and lightweight!
-                const config = {
-                    publicPath: "https://unpkg.com/@imgly/background-removal@1.4.5/dist/",
-                    model: "small", 
-                    progress: (key, current, total) => {
-                        if(key.includes('fetch')) {
-                            const percent = Math.round((current/total)*100) || 0;
-                            progressBar.style.width = `${percent}%`;
-                            loadingStatus.innerText = `Loading Fast AI: ${percent}%`;
-                        } else if(key.includes('compute')) {
-                            progressBar.style.width = `100%`;
-                            loadingStatus.innerText = "Extracting background...";
-                        }
-                    }
-                };
+                // Call the ES Module imported function directly
+                const imageBlob = await removeBackground(window.currentFile, config);
 
-                // Remove Background
-                const imageBlob = await imglyRemoveBackground(file, config);
-                
-                // Show Result
-                const url = URL.createObjectURL(imageBlob);
-                resultImage.src = url;
-                
-                loadingArea.classList.add('hidden');
-                resultArea.classList.remove('hidden');
+                window.currentResultUrl = URL.createObjectURL(imageBlob);
+                document.getElementById('transparentImg').src = window.currentResultUrl;
 
-                const originalNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
-                downloadBtn.onclick = () => {
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${originalNameWithoutExt}_ToolMitra_NoBG.png`; 
-                    a.click();
-                };
+                document.getElementById('processingSection').classList.add('hidden');
+                document.getElementById('resultSection').classList.remove('hidden');
 
             } catch (error) {
-                console.error("AI Error:", error);
-                alert(`Error: Connection failed or image is corrupted. Please refresh and try again.`);
-                location.reload();
+                console.error("Detailed AI Error: ", error);
+                alert("Error Details: " + (error.message || JSON.stringify(error)) + "\n\nTry using a slightly smaller image if memory crashed.");
+                window.resetTool();
             }
+        }
+
+        window.toggleDownloadMenu = function() {
+            document.getElementById('downloadMenu').classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.bg-blue-600') && !event.target.closest('.bg-blue-600')) {
+                let dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        window.downloadImage = function(type) {
+            if(!window.currentResultUrl) return;
+
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                let w = img.width;
+                let h = img.height;
+
+                if (type === 'standard') {
+                    const maxSize = 500;
+                    if (w > maxSize || h > maxSize) {
+                        const ratio = Math.min(maxSize / w, maxSize / h);
+                        w = Math.round(w * ratio);
+                        h = Math.round(h * ratio);
+                    }
+                }
+
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(img, 0, 0, w, h);
+
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = type === 'hd' ? 'ToolMitra_NoBG_HD.png' : 'ToolMitra_NoBG_Preview.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 'image/png', 1.0);
+            };
+            img.src = window.currentResultUrl;
+        }
+
+        window.resetTool = function() {
+            window.currentFile = null;
+            if(window.currentResultUrl) URL.revokeObjectURL(window.currentResultUrl);
+            window.currentResultUrl = null;
+            
+            document.getElementById('fileInput').value = "";
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressText').innerText = 'Initializing...';
+            document.getElementById('processingSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('downloadMenu').classList.remove('show');
+            document.getElementById('dropZone').classList.remove('hidden');
         }
     </script>
 </body>

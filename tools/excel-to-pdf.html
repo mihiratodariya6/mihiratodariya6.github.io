@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to PDF - ToolMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brandEmerald: '#10b981' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8f9fa; color: #333333; }
+        .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
+        .upload-area.dragover { border-color: #10b981; background-color: #ecfdf5; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fas fa-heart text-[#e5322d] text-2xl"></i>
+                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+            </a>
+            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-brandEmerald flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
+        </div>
+    </nav>
+
+    <div class="bg-emerald-50 border-b border-emerald-100 pt-10 pb-8">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <div class="w-16 h-16 mx-auto bg-white text-brandEmerald rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm border border-emerald-100">
+                <i class="fas fa-file-excel"></i>
+            </div>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Excel to PDF Converter</h1>
+            <p class="text-gray-600 text-[16px]">Convert your spreadsheets (XLSX, XLS, CSV) to beautiful, easy-to-read PDF documents.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-excel text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Upload Excel File</h3>
+                <p class="text-gray-500 text-sm mb-6">Drag & drop your .xlsx, .xls, or .csv file here</p>
+                <button class="bg-brandEmerald hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-md">
+                    Select File
+                </button>
+                <input type="file" id="fileInput" class="hidden" accept=".xlsx, .xls, .csv">
+            </div>
+
+            <div id="workspaceSection" class="hidden mt-6">
+                
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-file-excel text-4xl text-brandEmerald"></i>
+                        <div>
+                            <h3 id="fileName" class="font-bold text-gray-800 text-lg">spreadsheet.xlsx</h3>
+                            <p class="text-sm text-gray-500" id="fileSizeTxt">0 KB</p>
+                        </div>
+                    </div>
+                    <button onclick="resetTool()" class="text-gray-400 hover:text-red-500 transition text-xl"><i class="fas fa-trash-alt"></i></button>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg flex items-start gap-3 mb-6">
+                    <i class="fas fa-info-circle text-emerald-600 mt-1"></i>
+                    <p class="text-xs text-emerald-800 font-medium leading-relaxed">
+                        <strong>Formatting Note:</strong> We will extract the active sheet from your Excel file and convert it into a neat table format. The output PDF will be in Landscape orientation to fit maximum columns.
+                    </p>
+                </div>
+
+                <div class="text-center bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <button id="convertBtn" onclick="processExcelToPdf()" class="bg-brandEmerald hover:bg-emerald-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3 w-full sm:w-auto">
+                        <i class="fas fa-file-pdf"></i> Convert to PDF
+                    </button>
+                    <p id="statusText" class="text-gray-500 mt-3 hidden"><i class="fas fa-spinner fa-spin text-brandEmerald"></i> Reading spreadsheet and generating PDF...</p>
+                </div>
+            </div>
+
+            <div id="downloadSection" class="hidden mt-8 text-center bg-white p-10 rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto">
+                <i class="fas fa-check-circle text-5xl text-emerald-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Excel file converted successfully!</h2>
+                
+                <a id="downloadBtn" href="#" class="bg-brandEmerald hover:bg-emerald-600 text-white font-bold py-4 px-10 rounded-lg transition-colors text-xl shadow-lg inline-flex items-center gap-3">
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+                
+                <div class="mt-6">
+                    <button onclick="resetTool()" class="text-gray-500 hover:text-gray-700 font-semibold underline text-sm">Convert another Excel file</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentFile = null;
+        let pdfBlobUrl = null;
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        function handleFile(file) {
+            if (!file) return;
+            
+            const validTypes = ['.xlsx', '.xls', '.csv'];
+            const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+            
+            if (validTypes.includes(fileExtension) || file.type.includes('spreadsheet') || file.type.includes('excel') || file.type.includes('csv')) {
+                currentFile = file;
+                document.getElementById('fileName').innerText = file.name;
+                document.getElementById('fileSizeTxt').innerText = (file.size / 1024).toFixed(2) + " KB";
+                
+                dropZone.classList.add('hidden');
+                document.getElementById('workspaceSection').classList.remove('hidden');
+            } else {
+                alert("Please upload a valid Excel file (.xlsx, .xls, .csv).");
+            }
+        }
+
+        async function processExcelToPdf() {
+            const convertBtn = document.getElementById('convertBtn');
+            const statusText = document.getElementById('statusText');
+            
+            convertBtn.classList.add('hidden');
+            statusText.classList.remove('hidden');
+
+            try {
+                // 1. Read the Excel File
+                const data = await currentFile.arrayBuffer();
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // 2. Get the first sheet
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+
+                // 3. Convert sheet to HTML table string
+                let htmlString = XLSX.utils.sheet_to_html(worksheet);
+
+                if (!htmlString || htmlString.trim() === "") {
+                    throw new Error("The Excel sheet appears to be empty.");
+                }
+
+                // 4. Create a detached DOM element and inject styles
+                htmlString = htmlString.replace('<table', '<table class="excel-table"');
+                
+                const renderElement = document.createElement('div');
+                renderElement.innerHTML = `
+                    <style>
+                        .excel-table { width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 12px; }
+                        .excel-table th, .excel-table td { border: 1px solid #d1d5db; padding: 8px; text-align: left; }
+                        .excel-table th { background-color: #f3f4f6; font-weight: bold; color: #374151; }
+                        .excel-table tr:nth-child(even) { background-color: #f9fafb; }
+                    </style>
+                    <div style="padding: 20px; background-color: white;">
+                        <h2 style="font-family: 'Inter', sans-serif; color: #111827; margin-bottom: 15px; font-size: 20px; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
+                            ${currentFile.name}
+                        </h2>
+                        ${htmlString}
+                    </div>
+                `;
+
+                // 5. Setup html2pdf options
+                const opt = {
+                    margin:       0.5,
+                    filename:     currentFile.name.replace(/\.[^/.]+$/, "") + ".pdf",
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+                };
+
+                // 6. Generate PDF directly from the memory element
+                html2pdf().set(opt).from(renderElement).outputPdf('blob').then(function(blob) {
+                    pdfBlobUrl = URL.createObjectURL(blob);
+                    
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    downloadBtn.download = opt.filename;
+                    downloadBtn.href = pdfBlobUrl;
+
+                    // Switch Screen UI
+                    document.getElementById('workspaceSection').classList.add('hidden');
+                    document.getElementById('downloadSection').classList.remove('hidden');
+                    
+                }).catch(err => {
+                    console.error("PDF Rendering Error:", err);
+                    alert("Error creating PDF structure. The spreadsheet might be too large.");
+                    resetBtnUI();
+                });
+
+            } catch (error) {
+                console.error("Excel Parsing Error:", error);
+                alert("Error reading the Excel file: " + error.message);
+                resetBtnUI();
+            }
+        }
+
+        function resetBtnUI() {
+            document.getElementById('convertBtn').classList.remove('hidden');
+            document.getElementById('statusText').classList.add('hidden');
+        }
+
+        function resetTool() {
+            currentFile = null;
+            if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+            pdfBlobUrl = null;
+            
+            document.getElementById('fileInput').value = "";
+            document.getElementById('workspaceSection').classList.add('hidden');
+            document.getElementById('downloadSection').classList.add('hidden');
+            document.getElementById('statusText').classList.add('hidden');
+            document.getElementById('convertBtn').classList.remove('hidden');
+            document.getElementById('dropZone').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
