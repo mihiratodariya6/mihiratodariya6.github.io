@@ -3,275 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF to JPG - ToolMitra</title>
+    
+    <title>Convert PDF to JPG Online | Free PDF to Image | ToolMitra</title>
+    <meta name="description" content="Convert every page of a PDF into high-quality JPG images instantly. Extract all images from a PDF securely in your browser. 100% Free.">
+    <meta name="keywords" content="pdf to jpg, convert pdf to image, extract images from pdf, free pdf to jpg converter, ToolMitra">
+    <meta name="author" content="MihirSync">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/pdf-to-jpg.html" />
+
+    <meta property="og:title" content="Convert PDF to JPG Instantly | ToolMitra">
+    <meta property="og:description" content="Turn your PDF documents into high-quality JPG images for free. Processing happens locally on your device.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ToolMitra PDF to JPG Converter",
+      "description": "A high-speed, local browser tool to convert PDF pages into high-resolution JPG images packaged in a ZIP file.",
+      "applicationCategory": "UtilitiesApplication",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to convert PDF to JPG",
+      "step": [
+        { "@type": "HowToStep", "text": "Upload the PDF document." },
+        { "@type": "HowToStep", "text": "Select 'Page to JPG' to convert every page into an image." },
+        { "@type": "HowToStep", "text": "Click 'Convert to JPG' and download your ZIP file containing all images." }
+      ]
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
-    <script>
-        // Set worker path for PDF.js
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { brandYellow: '#f1c40f' }
-                }
-            }
-        }
-    </script>
+
+    <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandRed: '#e5322d', brandOrange: '#f0714b', brandGreen: '#4bbb56', brandYellow: '#f59e0b' } } } } </script>
     <style>
         body { background-color: #f8f9fa; color: #333333; }
-        .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
-        .upload-area.dragover { border-color: #f1c40f; background-color: #fefcf3; }
-        .img-preview { box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .img-preview:hover { transform: scale(1.02); }
+        .convert-card { transition: all 0.2s ease; border: 2px solid transparent; }
+        .convert-card:hover { border-color: #fde68a; background-color: #fffbeb; }
+        .convert-card.active { border-color: #f59e0b; background-color: #fffbeb; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.1); }
+        .convert-card.active .check-icon { display: block; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
-            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
-                <i class="fas fa-heart text-[#e5322d] text-2xl"></i>
-                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
-            </a>
-            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-yellow-600 flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Back to All Tools
-            </a>
-        </div>
-    </nav>
-
-    <div class="bg-yellow-50 border-b border-yellow-100 pt-10 pb-8">
-        <div class="max-w-4xl mx-auto text-center px-4">
-            <div class="w-16 h-16 mx-auto bg-white text-brandYellow rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm border border-yellow-100">
-                <i class="fas fa-images"></i>
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <nav class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4 md:gap-8">
+                <a href="../index.html" class="flex items-center gap-2 text-gray-500 hover:text-brandYellow transition font-bold text-sm">
+                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Back</span>
+                </a>
+                <a href="../index.html" class="flex items-center gap-2">
+                    <img src="../ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-11 w-auto object-contain">
+                    <span class="font-bold text-2xl text-gray-900">ToolMitra</span>
+                </a>
             </div>
-            <h1 class="text-[32px] font-bold text-gray-900 mb-2">PDF to JPG Converter</h1>
-            <p class="text-gray-600 text-[16px]">Convert every page of a PDF into high-quality JPG images instantly.</p>
-        </div>
-    </div>
+            <div class="hidden lg:flex space-x-8 text-[13px] font-bold text-gray-700 tracking-wide items-center">
+                <a href="merge-pdf.html" class="hover:text-brandRed transition">MERGE PDF</a>
+                <a href="split-pdf.html" class="hover:text-brandOrange transition">SPLIT PDF</a>
+                <a href="compress-pdf.html" class="hover:text-brandGreen transition">COMPRESS PDF</a>
+                <a href="pdf-to-jpg.html" class="text-brandYellow border-b-2 border-brandYellow pb-1">PDF TO JPG</a>
+            </div>
+            <div class="flex items-center ml-auto lg:ml-0">
+                <a href="#" class="bg-brandYellow hover:bg-yellow-600 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">Sign up</a>
+            </div>
+        </nav>
+    </header>
 
-    <main class="flex-grow py-8 px-4">
-        <div class="max-w-5xl mx-auto">
-            
-            <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-file-pdf text-5xl text-gray-300 mb-4"></i>
-                <h3 class="text-xl font-bold text-gray-700 mb-2">Upload a PDF file</h3>
-                <p class="text-gray-500 text-sm mb-6">Drag & drop your PDF document here</p>
-                <button class="bg-brandYellow hover:bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-md">
-                    Select PDF
+    <main class="flex-grow pt-12 pb-16 px-4">
+        
+        <div class="text-center max-w-4xl mx-auto mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">PDF to JPG</h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto">Convert each PDF page into a JPG image instantly. High quality, 100% free and secure.</p>
+        </div>
+
+        <section id="uploadSection" class="max-w-4xl mx-auto mb-16">
+            <div id="dropZone" class="bg-brandYellow bg-opacity-10 border-2 border-dashed border-brandYellow rounded-3xl p-10 md:p-20 transition cursor-pointer flex flex-col items-center justify-center min-h-[320px] shadow-sm hover:bg-opacity-20">
+                <i class="fas fa-file-image text-6xl text-brandYellow mb-6"></i>
+                <button class="bg-brandYellow hover:bg-yellow-600 text-white font-bold text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:scale-105 mb-4 pointer-events-none">
+                    Select PDF file
                 </button>
-                <input type="file" id="fileInput" class="hidden" accept="application/pdf">
+                <p class="text-gray-600 font-medium">or drop PDF here</p>
+                <input type="file" id="fileInput" accept="application/pdf" class="hidden">
             </div>
+        </section>
 
-            <div id="processingSection" class="hidden mt-8 text-center bg-white p-10 rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto">
-                <i class="fas fa-cog fa-spin text-5xl text-brandYellow mb-4"></i>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">Extracting Pages...</h3>
-                <p class="text-gray-500 mb-6" id="processDesc">Converting PDF pages to high-quality JPGs.</p>
+        <section id="workspace" class="hidden max-w-5xl mx-auto mb-16">
+            <div class="grid md:grid-cols-2 gap-8">
                 
-                <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
-                    <div id="progressBar" class="bg-brandYellow h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+                    <div id="previewThumbnail" class="w-32 h-40 bg-gray-100 border border-gray-200 mb-4 rounded flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-spinner fa-spin text-gray-400 text-2xl"></i>
+                    </div>
+                    <h3 id="fileName" class="font-bold text-lg text-gray-900 mb-1 truncate w-full px-4">document.pdf</h3>
+                    <p class="text-gray-500 font-medium text-sm"><span id="pageCount">0</span> Pages to convert</p>
                 </div>
-                <div class="flex justify-between text-xs font-bold text-gray-500">
-                    <span id="progressText">0% Completed</span>
-                    <span id="pageCountText">Page 0 of 0</span>
-                </div>
-            </div>
 
-            <div id="resultSection" class="hidden mt-8">
-                
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <i class="fas fa-check-circle text-4xl text-green-500"></i>
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-lg">Conversion Complete!</h3>
-                            <p class="text-sm text-gray-500">Successfully extracted <span id="finalCountTxt" class="font-bold text-gray-700">0</span> pages to JPG.</p>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-6 border-b pb-4">PDF to JPG Options</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="convert-card active cursor-pointer p-4 rounded-xl flex items-start gap-4 relative" onclick="selectMode(this, 'pageToJpg')">
+                                <i class="fas fa-images text-2xl text-brandYellow mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-gray-800">Page to JPG</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Every page of this PDF will be converted into a separate JPG file.</p>
+                                </div>
+                                <i class="fas fa-check-circle text-brandYellow absolute top-4 right-4 text-xl check-icon hidden"></i>
+                            </div>
                         </div>
                     </div>
-                    
-                    <a id="downloadBtn" href="#" class="bg-brandYellow hover:bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-lg flex items-center gap-3">
-                        <i class="fas fa-download"></i> <span id="downloadBtnText">Download Images</span>
-                    </a>
-                </div>
 
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-gray-800">Preview (High Quality JPGs)</h3>
-                        <button onclick="resetTool()" class="text-sm text-gray-500 hover:text-red-500 font-bold underline transition">Start Over</button>
-                    </div>
-                    
-                    <div id="imageGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 max-h-[500px] overflow-y-auto p-2 bg-gray-50 rounded-lg border border-gray-100">
-                        </div>
+                    <button id="convertBtn" class="w-full mt-6 bg-brandYellow hover:bg-yellow-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-shadow">
+                        Convert to JPG <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
-
             </div>
 
-        </div>
+            <div id="progressArea" class="hidden mt-8 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center">
+                <h3 id="progressText" class="font-bold text-xl text-gray-800 mb-4">Rendering pages to high-quality images...</h3>
+                <div class="w-full bg-gray-200 rounded-full h-4 mb-2 overflow-hidden">
+                    <div id="progressBar" class="bg-brandYellow h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="progressPercent" class="text-sm font-bold text-brandYellow mb-4">0%</p>
+                <p class="text-xs text-gray-500"><i class="fas fa-lock text-brandYellow"></i> Images are generated directly in your browser</p>
+            </div>
+
+            <div id="resultArea" class="hidden mt-8 bg-yellow-50 p-8 rounded-3xl border border-yellow-200 text-center">
+                <i class="fas fa-check-circle text-6xl text-brandYellow mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">PDF has been converted!</h2>
+                <p class="text-gray-600 mb-8">All your JPG images have been securely packed into a ZIP file.</p>
+                
+                <button id="downloadBtn" class="bg-gray-900 hover:bg-black text-white font-bold text-xl px-12 py-4 rounded-xl shadow-lg transition transform hover:scale-105">
+                    Download ZIP File <i class="fas fa-file-archive ml-2"></i>
+                </button>
+                <div class="mt-4">
+                    <button onclick="location.reload()" class="text-gray-500 font-bold hover:text-brandYellow transition text-sm">
+                        <i class="fas fa-redo"></i> Convert another file
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <article class="max-w-5xl mx-auto bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm mb-16">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">High Quality PDF to JPG</h2>
+                    <p class="text-gray-600 mb-4 leading-relaxed">Easily extract images from your PDF files. Our tool renders every single page of your PDF document into a high-resolution JPG image, perfect for sharing on social media or inserting into presentations.</p>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <i class="fas fa-shield-check text-2xl text-brandYellow mt-1"></i>
+                        <div><h3 class="font-bold text-gray-900">100% Private</h3><p class="text-sm text-gray-500 mt-1">Unlike other tools, we do not upload your PDF to our servers. The conversion process is powered by your browser.</p></div>
+                    </div>
+                    <div class="flex gap-4">
+                        <i class="fas fa-file-archive text-2xl text-blue-500 mt-1"></i>
+                        <div><h3 class="font-bold text-gray-900">Convenient ZIP Download</h3><p class="text-sm text-gray-500 mt-1">We automatically group all your generated JPG images into one handy ZIP folder for a single-click download.</p></div>
+                    </div>
+                </div>
+            </div>
+        </article>
     </main>
 
+    <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
+        <div class="max-w-[1300px] mx-auto px-4 text-center">
+            <p class="text-sm">© 2026 ToolMitra. Built for speed and privacy.</p>
+        </div>
+    </footer>
+
     <script>
-        let currentPdfData = null;
-        let extractedImages = []; // Array to store base64 images
-        let finalDownloadUrl = null;
-        let isZip = false;
+        const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
+        const uploadSection = document.getElementById('uploadSection'), workspace = document.getElementById('workspace');
+        const convertBtn = document.getElementById('convertBtn'), progressArea = document.getElementById('progressArea');
+        const progressBar = document.getElementById('progressBar'), progressPercent = document.getElementById('progressPercent');
+        const progressText = document.getElementById('progressText'), resultArea = document.getElementById('resultArea');
+        const downloadBtn = document.getElementById('downloadBtn'), previewThumbnail = document.getElementById('previewThumbnail');
+        
+        let originalFile = null;
+        let pdfjsDoc = null;
+        let selectedMode = 'pageToJpg';
 
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
-        });
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        // Upload Listeners
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('bg-yellow-50'); };
+        dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.classList.remove('bg-yellow-50'); };
+        dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('bg-yellow-50'); handleFile(e.dataTransfer.files[0]); };
 
         async function handleFile(file) {
-            if (!file || file.type !== "application/pdf") {
-                alert("Please upload a valid PDF file.");
-                return;
-            }
-
-            dropZone.classList.add('hidden');
-            document.getElementById('processingSection').classList.remove('hidden');
+            if(!file || file.type !== 'application/pdf') { alert("Please select a valid PDF file."); return; }
+            originalFile = file;
             
+            document.getElementById('fileName').innerText = file.name;
+            uploadSection.classList.add('hidden');
+            workspace.classList.remove('hidden');
+
             try {
                 const arrayBuffer = await file.arrayBuffer();
-                currentPdfData = new Uint8Array(arrayBuffer);
-                await convertPdfToImages(file.name);
-            } catch (error) {
-                console.error(error);
-                alert("Failed to read the PDF file.");
-                resetTool();
+                pdfjsDoc = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                document.getElementById('pageCount').innerText = pdfjsDoc.numPages;
+
+                // Render First Page as Thumbnail
+                const page = await pdfjsDoc.getPage(1);
+                const viewport = page.getViewport({ scale: 0.5 });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.height = viewport.height; canvas.width = viewport.width;
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                
+                previewThumbnail.innerHTML = '';
+                canvas.className = "w-full h-full object-contain";
+                previewThumbnail.appendChild(canvas);
+
+            } catch(e) {
+                console.error(e);
+                previewThumbnail.innerHTML = '<i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>';
             }
         }
 
-        async function convertPdfToImages(filename) {
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const pageCountText = document.getElementById('pageCountText');
-            const imageGrid = document.getElementById('imageGrid');
+        window.selectMode = (element, mode) => {
+            document.querySelectorAll('.convert-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            selectedMode = mode;
+        }
+
+        // Helper to convert canvas to blob
+        const getCanvasBlob = (canvas) => new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+
+        // The Conversion Logic
+        convertBtn.onclick = async () => {
+            if(!pdfjsDoc) return;
             
-            imageGrid.innerHTML = '';
-            extractedImages = [];
-
+            convertBtn.disabled = true;
+            document.querySelector('.convert-card').parentElement.style.opacity = '0.5';
+            progressArea.classList.remove('hidden');
+            
             try {
-                // Load PDF document
-                const loadingTask = pdfjsLib.getDocument({ data: currentPdfData });
-                const pdf = await loadingTask.promise;
-                const totalPages = pdf.numPages;
-
-                // Prepare JSZip instance in case of multiple pages
-                const zip = new JSZip();
+                const totalPages = pdfjsDoc.numPages;
+                const zip = new JSZip(); // Initialize JSZip
+                const imgFolder = zip.folder("ToolMitra_Images");
 
                 for (let i = 1; i <= totalPages; i++) {
-                    // Update Progress UI
-                    let percent = Math.round((i / totalPages) * 100);
-                    progressBar.style.width = percent + '%';
-                    progressText.innerText = percent + '% Completed';
-                    pageCountText.innerText = `Page ${i} of ${totalPages}`;
+                    // Update UI
+                    const percent = Math.round((i / totalPages) * 100);
+                    progressBar.style.width = `${percent}%`;
+                    progressPercent.innerText = `${percent}%`;
+                    progressText.innerText = `Rendering page ${i} of ${totalPages}...`;
 
-                    // Get Page
-                    const page = await pdf.getPage(i);
-                    
-                    // High resolution scale (2.0 gives crisp HD quality)
-                    const viewport = page.getViewport({ scale: 2.0 });
-                    
-                    // Create Canvas
+                    // Render Page at High Scale for good Quality
+                    const page = await pdfjsDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 2.5 }); // High resolution scale
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
+                    canvas.width = viewport.width; canvas.height = viewport.height;
                     
-                    // Render page to canvas
-                    const renderContext = { canvasContext: ctx, viewport: viewport };
-                    await page.render(renderContext).promise;
-                    
-                    // Convert Canvas to JPG Data URL
-                    const imgDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                    extractedImages.push(imgDataUrl);
+                    // Fill white background (PDFs are often transparent)
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // Add to ZIP if multiple pages
-                    if (totalPages > 1) {
-                        // Remove "data:image/jpeg;base64," prefix for zip
-                        const base64Data = imgDataUrl.split(',')[1];
-                        zip.file(`Page_${i}.jpg`, base64Data, {base64: true});
-                    }
-
-                    // Display Thumbnail in UI
-                    const imgElement = document.createElement('img');
-                    imgElement.src = imgDataUrl;
-                    imgElement.className = 'w-full h-auto object-cover img-preview border border-gray-300 rounded bg-white';
+                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
                     
-                    const wrapDiv = document.createElement('div');
-                    wrapDiv.className = 'flex flex-col items-center gap-2';
-                    wrapDiv.innerHTML = `<span class="text-xs font-bold text-gray-500">Page ${i}</span>`;
-                    wrapDiv.insertBefore(imgElement, wrapDiv.firstChild);
+                    // Convert to Blob and add to ZIP
+                    const blob = await getCanvasBlob(canvas);
                     
-                    imageGrid.appendChild(wrapDiv);
-
-                    // Give browser a tiny breathing room so UI doesn't freeze on big PDFs
-                    await new Promise(r => setTimeout(r, 10));
+                    // Format file name with leading zeros (e.g. Page_01.jpg)
+                    const pageNum = i.toString().padStart(totalPages.toString().length, '0');
+                    imgFolder.file(`Page_${pageNum}.jpg`, blob);
                 }
 
-                // Process Download Link
-                const downloadBtn = document.getElementById('downloadBtn');
-                const baseFilename = filename.replace(/\.[^/.]+$/, ""); // remove .pdf
-
-                if (totalPages === 1) {
-                    // Single Image Download
-                    isZip = false;
-                    finalDownloadUrl = extractedImages[0];
-                    downloadBtn.download = `${baseFilename}.jpg`;
-                    document.getElementById('downloadBtnText').innerText = "Download JPG";
-                } else {
-                    // Multiple Images -> ZIP Download
-                    isZip = true;
-                    document.getElementById('processDesc').innerText = "Compressing into a ZIP file...";
-                    const zipContent = await zip.generateAsync({ type: "blob" });
-                    finalDownloadUrl = URL.createObjectURL(zipContent);
-                    downloadBtn.download = `${baseFilename}_Images.zip`;
-                    document.getElementById('downloadBtnText').innerText = `Download ZIP (${totalPages} JPGs)`;
-                }
-
-                downloadBtn.href = finalDownloadUrl;
-                document.getElementById('finalCountTxt').innerText = totalPages;
-
+                // Generate ZIP File
+                progressText.innerText = "Packing images into ZIP...";
+                const zipBlob = await zip.generateAsync({ type: "blob" });
+                
                 // Show Results
-                document.getElementById('processingSection').classList.add('hidden');
-                document.getElementById('resultSection').classList.remove('hidden');
+                progressArea.classList.add('hidden');
+                workspace.children[0].classList.add('hidden');
+                workspace.children[1].classList.add('hidden');
+                resultArea.classList.remove('hidden');
+                
+                // Setup Download
+                const url = URL.createObjectURL(zipBlob);
+                const originalNameWithoutExt = originalFile.name.replace(/\.[^/.]+$/, "");
+                downloadBtn.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${originalNameWithoutExt}_Images.zip`;
+                    a.click();
+                };
 
-            } catch (error) {
-                console.error("Conversion Error: ", error);
-                alert("An error occurred while converting PDF to JPG.");
-                resetTool();
+            } catch(error) {
+                console.error("Conversion Error:", error);
+                alert("An error occurred during conversion.");
+                location.reload();
             }
-        }
-
-        function resetTool() {
-            currentPdfData = null;
-            extractedImages = [];
-            
-            if(finalDownloadUrl && isZip) {
-                URL.revokeObjectURL(finalDownloadUrl); // Clean up memory for zip blobs
-            }
-            finalDownloadUrl = null;
-            
-            document.getElementById('fileInput').value = "";
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('progressText').innerText = '0% Completed';
-            document.getElementById('pageCountText').innerText = 'Page 0 of 0';
-            
-            document.getElementById('processingSection').classList.add('hidden');
-            document.getElementById('resultSection').classList.add('hidden');
-            dropZone.classList.remove('hidden');
-        }
+        };
     </script>
 </body>
 </html>
