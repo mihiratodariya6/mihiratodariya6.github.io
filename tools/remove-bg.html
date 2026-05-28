@@ -43,7 +43,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser/bundle.umd.min.js"></script>
+    <script src="https://unpkg.com/@imgly/background-removal@1.4.3/dist/browser/bundle.umd.min.js"></script>
 
     <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandPurple: '#8b5cf6', brandRed: '#e5322d', brandOrange: '#f0714b', brandGreen: '#4bbb56', brandYellow: '#f59e0b' } } } } </script>
     <style>
@@ -109,7 +109,7 @@
                         <i class="fas fa-magic text-2xl text-brandPurple absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">AI is working its magic...</h3>
-                    <p id="loadingStatus" class="text-gray-500 font-medium">Loading AI Model (This takes a moment on first run)</p>
+                    <p id="loadingStatus" class="text-gray-500 font-medium font-mono bg-gray-50 px-4 py-2 rounded border mt-2">Initializing AI Engine...</p>
                     <p class="text-xs text-gray-400 mt-4"><i class="fas fa-shield-alt text-brandPurple"></i> Processed entirely on your device</p>
                 </div>
 
@@ -202,18 +202,18 @@
                 imgTemp.src = URL.createObjectURL(file);
                 imgTemp.onload = () => { document.getElementById('resBadge').innerText = `${imgTemp.width} x ${imgTemp.height} px`; };
 
-                loadingStatus.innerText = "Initializing HD AI Model... (May take 10-20s on first run)";
+                loadingStatus.innerText = "Connecting to Local AI Engine...";
 
                 // MAGIC HAPPENS HERE: Config for @imgly/background-removal
-                // It downloads the WASM model locally. It is highly optimized to maintain original HD resolution.
+                // Changed to unpkg and highly stable version 1.4.3 for flawless CDN loading
                 const config = {
-                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/",
+                    publicPath: "https://unpkg.com/@imgly/background-removal@1.4.3/dist/",
                     progress: (key, current, total) => {
                         if(key.includes('fetch')) {
-                            const percent = Math.round((current/total)*100);
-                            loadingStatus.innerText = `Downloading AI Engine: ${percent}%`;
+                            const percent = Math.round((current/total)*100) || 0;
+                            loadingStatus.innerText = `Downloading Models: ${percent}%`;
                         } else if(key.includes('compute')) {
-                            loadingStatus.innerText = "Analyzing pixels and extracting background...";
+                            loadingStatus.innerText = "Analyzing image and erasing background...";
                         }
                     }
                 };
@@ -233,13 +233,13 @@
                 downloadBtn.onclick = () => {
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `${originalNameWithoutExt}_ToolMitra_NoBG.png`; // Force PNG to keep transparency
+                    a.download = `${originalNameWithoutExt}_ToolMitra_NoBG.png`; 
                     a.click();
                 };
 
             } catch (error) {
                 console.error("AI Error:", error);
-                alert("Something went wrong processing the image. Please try another image.");
+                alert(`AI Processing Error: ${error.message || "Failed to load model"}. Please check your internet connection or try a smaller image.`);
                 location.reload();
             }
         }
