@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,89 +8,41 @@
 
     <title>Split PDF Files Online for Free - Extract PDF Pages | ToolMitra</title>
 
-    <meta name="description" content="Split PDF files online for free with ToolMitra. Extract PDF pages instantly with secure browser processing and no watermark.">
+    <meta name="description" content="Split PDF files online for free with ToolMitra. Extract pages from PDFs instantly with secure browser processing and no watermark.">
 
-    <meta name="keywords" content="split pdf, extract pdf pages, online pdf splitter, split pdf free, ToolMitra">
+    <meta name="keywords" content="split pdf, extract pdf pages, online pdf splitter, split pdf online free, ToolMitra pdf">
 
     <meta name="author" content="MihirSync">
 
     <meta name="robots" content="index, follow">
 
-    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/split-pdf.html">
+    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/split-pdf.html" />
 
     <!-- OPEN GRAPH -->
 
     <meta property="og:title" content="Split PDF Files Online for Free | ToolMitra">
 
-    <meta property="og:description" content="Extract pages from PDFs instantly with secure browser processing.">
+    <meta property="og:description" content="Extract and split PDF pages instantly with ToolMitra. 100% Free and Secure.">
 
     <meta property="og:type" content="website">
 
     <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
 
-    <!-- SCHEMA -->
+    <!-- GOOGLE FONTS -->
 
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"WebApplication",
-      "name":"ToolMitra Split PDF",
-      "url":"https://mihirsync.github.io/ToolMitra/tools/split-pdf.html",
-      "applicationCategory":"UtilitiesApplication",
-      "operatingSystem":"All",
-      "description":"Free online PDF splitter tool to extract pages securely inside browser.",
-      "offers":{
-        "@type":"Offer",
-        "price":"0",
-        "priceCurrency":"INR"
-      }
-    }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"FAQPage",
-      "mainEntity":[
-        {
-          "@type":"Question",
-          "name":"Is ToolMitra Split PDF free?",
-          "acceptedAnswer":{
-            "@type":"Answer",
-            "text":"Yes, ToolMitra Split PDF is completely free to use."
-          }
-        },
-        {
-          "@type":"Question",
-          "name":"Are my PDF files secure?",
-          "acceptedAnswer":{
-            "@type":"Answer",
-            "text":"Yes, all PDF processing happens locally inside your browser."
-          }
-        }
-      ]
-    }
-    </script>
+    <!-- FONT AWESOME -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <!-- TAILWIND -->
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- ICONS -->
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <!-- FONT -->
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- PDF LIB -->
 
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
-    <!-- JSZIP -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -107,21 +60,25 @@
     </script>
 
     <style>
+
         body{
             background:#f8f9fa;
-            color:#333;
+            font-family:'Inter',sans-serif;
         }
+
     </style>
 
 </head>
 
-<body class="antialiased min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
 <!-- HEADER -->
 
 <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
 
     <nav class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+
+        <!-- LEFT -->
 
         <div class="flex items-center gap-4 md:gap-8">
 
@@ -150,27 +107,33 @@
 
         </div>
 
+        <!-- NAV -->
+
         <div class="hidden lg:flex space-x-8 text-[13px] font-bold text-gray-700 tracking-wide items-center">
 
-            <a href="merge-pdf.html" class="hover:text-brandRed transition">
-                MERGE PDF
+            <a href="merge-pdf.html"
+               class="hover:text-brandRed transition">
+               MERGE PDF
             </a>
 
             <a href="split-pdf.html"
                class="text-brandRed border-b-2 border-brandRed pb-1">
-
-                SPLIT PDF
+               SPLIT PDF
             </a>
 
-            <a href="compress-pdf.html" class="hover:text-brandRed transition">
-                COMPRESS PDF
+            <a href="compress-pdf.html"
+               class="hover:text-brandRed transition">
+               COMPRESS PDF
             </a>
 
-            <a href="../index.html" class="hover:text-brandRed transition">
-                ALL TOOLS
+            <a href="../index.html"
+               class="hover:text-brandRed transition">
+               ALL TOOLS
             </a>
 
         </div>
+
+        <!-- BUTTON -->
 
         <div class="flex items-center ml-auto lg:ml-0">
 
@@ -178,6 +141,7 @@
                class="bg-brandRed hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">
 
                 Sign up
+
             </a>
 
         </div>
@@ -190,18 +154,16 @@
 
 <main class="flex-grow pt-12 pb-16 px-4">
 
+    <!-- HERO -->
+
     <section class="text-center max-w-4xl mx-auto mb-16">
 
         <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
-
             Split PDF files
-
         </h1>
 
         <p class="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
-
-            Extract pages from your PDF easily with the simplest online PDF splitter available. 100% secure and free.
-
+            Extract pages from your PDF easily with the simplest online PDF splitter tool. 100% secure and free.
         </p>
 
         <!-- DROP ZONE -->
@@ -214,7 +176,7 @@
             <button id="selectBtn"
                     class="bg-[#e5322d] hover:bg-red-700 text-white font-bold text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:scale-105 mb-4 pointer-events-none">
 
-                Select PDF file
+                Select PDF File
 
             </button>
 
@@ -235,28 +197,24 @@
              class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hidden mb-6 text-left">
 
             <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">
-
                 Selected PDF:
-
             </h3>
 
-            <div id="fileName"
-                 class="bg-gray-50 p-4 rounded-xl border border-gray-100 mb-5">
+            <div id="fileInfo"
+                 class="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-gray-100 mb-6">
 
             </div>
 
             <!-- PAGE INPUT -->
 
             <label class="block text-sm font-bold text-gray-700 mb-2">
-
-                Enter page numbers (example: 1,2,5)
-
+                Enter page numbers to extract
             </label>
 
             <input type="text"
                    id="pageInput"
-                   placeholder="1,2,5"
-                   class="w-full border border-gray-300 rounded-xl px-4 py-4 mb-6 outline-none focus:border-brandRed">
+                   placeholder="Example: 1,2,5"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-3 mb-6 outline-none focus:border-brandRed">
 
             <!-- BUTTON -->
 
@@ -303,7 +261,7 @@ const fileInput = document.getElementById('fileInput');
 
 const fileUI = document.getElementById('fileUI');
 
-const fileName = document.getElementById('fileName');
+const fileInfo = document.getElementById('fileInfo');
 
 const splitBtn = document.getElementById('splitBtn');
 
@@ -315,15 +273,11 @@ let selectedFile = null;
 
 /* CLICK */
 
-dropZone.addEventListener('click',()=>{
+dropZone.addEventListener('click', () => fileInput.click());
 
-    fileInput.click();
+/* SELECT */
 
-});
-
-/* CHANGE */
-
-fileInput.addEventListener('change',(e)=>{
+fileInput.addEventListener('change', (e) => {
 
     handleFile(e.target.files[0]);
 
@@ -331,7 +285,7 @@ fileInput.addEventListener('change',(e)=>{
 
 /* DRAG */
 
-dropZone.addEventListener('dragover',(e)=>{
+dropZone.addEventListener('dragover', (e) => {
 
     e.preventDefault();
 
@@ -341,7 +295,7 @@ dropZone.addEventListener('dragover',(e)=>{
 
 /* LEAVE */
 
-dropZone.addEventListener('dragleave',(e)=>{
+dropZone.addEventListener('dragleave', (e) => {
 
     e.preventDefault();
 
@@ -351,7 +305,7 @@ dropZone.addEventListener('dragleave',(e)=>{
 
 /* DROP */
 
-dropZone.addEventListener('drop',(e)=>{
+dropZone.addEventListener('drop', (e) => {
 
     e.preventDefault();
 
@@ -361,13 +315,13 @@ dropZone.addEventListener('drop',(e)=>{
 
 });
 
-/* HANDLE FILE */
+/* HANDLE */
 
 function handleFile(file){
 
     if(!file || file.type !== 'application/pdf'){
 
-        alert('Please select valid PDF file.');
+        alert("Please select valid PDF file.");
 
         return;
 
@@ -377,29 +331,29 @@ function handleFile(file){
 
     fileUI.classList.remove('hidden');
 
-    fileName.innerHTML = `
-    
-        <div class="flex items-center gap-3">
+    fileInfo.innerHTML = `
+
+        <div class="flex items-center gap-3 overflow-hidden">
 
             <i class="fas fa-file-pdf text-brandRed text-2xl"></i>
 
-            <span class="font-medium text-gray-700">
+            <span class="text-sm font-medium text-gray-700 truncate">
                 ${file.name}
             </span>
 
         </div>
-    
+
     `;
 
 }
 
-/* SPLIT PDF */
+/* SPLIT */
 
-splitBtn.addEventListener('click', async ()=>{
+splitBtn.addEventListener('click', async () => {
 
     if(!selectedFile){
 
-        alert('Please upload PDF.');
+        alert("Please upload PDF.");
 
         return;
 
@@ -407,12 +361,12 @@ splitBtn.addEventListener('click', async ()=>{
 
     const pages = pageInput.value
         .split(',')
-        .map(p => parseInt(p.trim()))
+        .map(p => parseInt(p.trim()) - 1)
         .filter(p => !isNaN(p));
 
     if(pages.length === 0){
 
-        alert('Enter valid page numbers.');
+        alert("Enter valid page numbers.");
 
         return;
 
@@ -421,73 +375,54 @@ splitBtn.addEventListener('click', async ()=>{
     splitBtn.disabled = true;
 
     splitBtn.innerHTML = `
-    
         <i class="fas fa-spinner fa-spin mr-2"></i>
         Processing...
-    
     `;
 
     statusMsg.classList.remove('hidden');
 
-    statusMsg.innerText =
-        'Processing your PDF securely in browser...';
+    statusMsg.innerText = "Splitting PDF securely in browser...";
 
     statusMsg.className =
-        'text-center mt-3 text-sm font-bold text-blue-600';
+        "text-center mt-3 text-sm font-bold text-blue-600";
 
     try{
 
         const { PDFDocument } = PDFLib;
 
-        const zip = new JSZip();
-
-        const bytes =
+        const existingPdfBytes =
             await selectedFile.arrayBuffer();
 
-        const pdf =
-            await PDFDocument.load(bytes);
+        const existingPdf =
+            await PDFDocument.load(existingPdfBytes);
 
-        for(let pageNum of pages){
+        const newPdf =
+            await PDFDocument.create();
 
-            if(pageNum < 1 || pageNum > pdf.getPageCount()){
+        const copiedPages =
+            await newPdf.copyPages(existingPdf, pages);
 
-                continue;
+        copiedPages.forEach((page) => {
 
-            }
+            newPdf.addPage(page);
 
-            const newPdf =
-                await PDFDocument.create();
+        });
 
-            const [copiedPage] =
-                await newPdf.copyPages(pdf,[pageNum - 1]);
+        const pdfBytes =
+            await newPdf.save();
 
-            newPdf.addPage(copiedPage);
-
-            const pdfBytes =
-                await newPdf.save();
-
-            zip.file(
-                `page-${pageNum}.pdf`,
-                pdfBytes
-            );
-
-        }
-
-        const zipBlob =
-            await zip.generateAsync({
-                type:'blob'
-            });
+        const blob =
+            new Blob([pdfBytes], { type: 'application/pdf' });
 
         const url =
-            URL.createObjectURL(zipBlob);
+            URL.createObjectURL(blob);
 
         const a =
             document.createElement('a');
 
         a.href = url;
 
-        a.download =
-            'ToolMitra_Split_PDF.zip';
+        a.download = 'ToolMitra_Splitted.pdf';
 
         document.body.appendChild(a);
 
@@ -496,10 +431,10 @@ splitBtn.addEventListener('click', async ()=>{
         document.body.removeChild(a);
 
         statusMsg.innerText =
-            'Success! Your split PDF files are downloading.';
+            "Success! Your split PDF is downloading.";
 
         statusMsg.className =
-            'text-center mt-3 text-sm font-bold text-green-600';
+            "text-center mt-3 text-sm font-bold text-green-600";
 
         splitBtn.innerHTML =
             'Split More PDFs <i class="fas fa-redo ml-2"></i>';
@@ -513,10 +448,10 @@ splitBtn.addEventListener('click', async ()=>{
         console.error(error);
 
         statusMsg.innerText =
-            'Oops! Something went wrong.';
+            "Oops! Something went wrong.";
 
         statusMsg.className =
-            'text-center mt-3 text-sm font-bold text-red-600';
+            "text-center mt-3 text-sm font-bold text-red-600";
 
         splitBtn.innerHTML =
             'Try Again';
@@ -531,3 +466,4 @@ splitBtn.addEventListener('click', async ()=>{
 
 </body>
 </html>
+```
