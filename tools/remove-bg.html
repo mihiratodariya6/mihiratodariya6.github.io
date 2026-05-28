@@ -22,28 +22,13 @@
       "@type": "WebApplication",
       "name": "ToolMitra HD Background Remover",
       "description": "An advanced, browser-based AI tool to remove backgrounds from images in high definition (4K) without losing quality.",
-      "applicationCategory": "DesignApplication",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to remove background from an image in HD",
-      "step": [
-        { "@type": "HowToStep", "text": "Upload your JPG or PNG image." },
-        { "@type": "HowToStep", "text": "Wait a few seconds for the AI to process the image securely in your browser." },
-        { "@type": "HowToStep", "text": "Download the result as a high-quality Transparent PNG." }
-      ]
+      "applicationCategory": "DesignApplication"
     }
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://unpkg.com/@imgly/background-removal@1.4.3/dist/browser/bundle.umd.min.js"></script>
 
     <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandPurple: '#8b5cf6', brandRed: '#e5322d', brandOrange: '#f0714b', brandGreen: '#4bbb56', brandYellow: '#f59e0b' } } } } </script>
     <style>
@@ -109,7 +94,7 @@
                         <i class="fas fa-magic text-2xl text-brandPurple absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">AI is working its magic...</h3>
-                    <p id="loadingStatus" class="text-gray-500 font-medium font-mono bg-gray-50 px-4 py-2 rounded border mt-2">Initializing AI Engine...</p>
+                    <p id="loadingStatus" class="text-gray-500 font-medium font-mono bg-gray-50 px-4 py-2 rounded border mt-2">Connecting to AI Engine...</p>
                     <p class="text-xs text-gray-400 mt-4"><i class="fas fa-shield-alt text-brandPurple"></i> Processed entirely on your device</p>
                 </div>
 
@@ -174,7 +159,10 @@
         </div>
     </footer>
 
-    <script>
+    <script type="module">
+        // Importing exactly from the most stable CDN endpoint (ESM format)
+        import imglyRemoveBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm";
+
         const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
         const uploadSection = document.getElementById('uploadSection'), workspace = document.getElementById('workspace');
         const loadingArea = document.getElementById('loadingArea'), resultArea = document.getElementById('resultArea');
@@ -204,21 +192,20 @@
 
                 loadingStatus.innerText = "Connecting to Local AI Engine...";
 
-                // MAGIC HAPPENS HERE: Config for @imgly/background-removal
-                // Changed to unpkg and highly stable version 1.4.3 for flawless CDN loading
+                // Model Configuration
                 const config = {
-                    publicPath: "https://unpkg.com/@imgly/background-removal@1.4.3/dist/",
+                    publicPath: "https://unpkg.com/@imgly/background-removal@1.4.5/dist/",
                     progress: (key, current, total) => {
                         if(key.includes('fetch')) {
                             const percent = Math.round((current/total)*100) || 0;
-                            loadingStatus.innerText = `Downloading Models: ${percent}%`;
+                            loadingStatus.innerText = `Downloading AI Assets: ${percent}%`;
                         } else if(key.includes('compute')) {
                             loadingStatus.innerText = "Analyzing image and erasing background...";
                         }
                     }
                 };
 
-                // Perform Background Removal
+                // MAGIC HAPPENS HERE: AI Background Removal
                 const imageBlob = await imglyRemoveBackground(file, config);
                 
                 // Show Result
@@ -239,7 +226,7 @@
 
             } catch (error) {
                 console.error("AI Error:", error);
-                alert(`AI Processing Error: ${error.message || "Failed to load model"}. Please check your internet connection or try a smaller image.`);
+                alert(`Something went wrong. Please check your internet connection and try again.`);
                 location.reload();
             }
         }
