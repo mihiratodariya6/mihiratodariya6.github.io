@@ -26,7 +26,6 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
     }
     </script>
-    
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,25 +39,11 @@
     }
     </script>
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "Is my image uploaded to any server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No, ToolMitra uses Local AI processing. Your image never leaves your device, ensuring 100% privacy." }
-      }, {
-        "@type": "Question",
-        "name": "Will the image quality drop after removing the background?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Absolutely not. Unlike other tools, we maintain the original HD or 4K resolution of your photo." }
-      }]
-    }
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser/bundle.umd.min.js"></script>
 
     <script> tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandPurple: '#8b5cf6', brandRed: '#e5322d', brandOrange: '#f0714b', brandGreen: '#4bbb56', brandYellow: '#f59e0b' } } } } </script>
     <style>
@@ -88,9 +73,6 @@
                 <a href="split-pdf.html" class="hover:text-brandOrange transition">SPLIT PDF</a>
                 <a href="remove-bg.html" class="text-brandPurple border-b-2 border-brandPurple pb-1">REMOVE BG</a>
                 <a href="../index.html" class="hover:text-brandRed transition">ALL TOOLS</a>
-            </div>
-            <div class="flex items-center ml-auto lg:ml-0">
-                <a href="#" class="bg-brandPurple hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition shadow-md">Sign up</a>
             </div>
         </nav>
     </header>
@@ -162,24 +144,6 @@
                 </div>
             </div>
         </section>
-
-        <article class="max-w-5xl mx-auto bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm mb-16">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Canva-Level HD Quality</h2>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Most free background removers shrink your image and ruin the quality. ToolMitra uses a state-of-the-art AI model that preserves your original 4K/HD resolution perfectly.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <i class="fas fa-shield-check text-2xl text-brandPurple mt-1"></i>
-                        <div>
-                            <h3 class="font-bold text-gray-900">100% Private (No Servers)</h3>
-                            <p class="text-sm text-gray-500 mt-1">Your photo never leaves your phone or computer. Our powerful AI runs completely offline inside your web browser.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
     </main>
 
     <footer class="bg-[#1d1f24] text-gray-400 py-16 mt-auto">
@@ -188,16 +152,17 @@
         </div>
     </footer>
 
-    <script type="module">
-        import imglyRemoveBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm";
-
-        const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
+    <script>
+        const fileInput = document.getElementById('fileInput');
         const uploadSection = document.getElementById('uploadSection'), workspace = document.getElementById('workspace');
         const loadingArea = document.getElementById('loadingArea'), resultArea = document.getElementById('resultArea');
         const resultImage = document.getElementById('resultImage'), downloadBtn = document.getElementById('downloadBtn');
         const loadingStatus = document.getElementById('loadingStatus');
 
         fileInput.onchange = (e) => { if(e.target.files.length > 0) handleFile(e.target.files[0]); };
+        
+        // Drag and Drop
+        const dropZone = document.getElementById('dropZone');
         dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('bg-purple-100'); };
         dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); };
         dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('bg-purple-100'); if(e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]); };
@@ -205,12 +170,19 @@
         async function handleFile(file) {
             if(!file || !file.type.startsWith('image/')) { alert("Please upload a valid image file (JPG, PNG)."); return; }
             
+            // Check if Library Loaded Successfully
+            if (typeof imglyRemoveBackground === 'undefined') {
+                alert("AI Engine is still loading. Please wait 2 seconds and try again!");
+                return;
+            }
+
             uploadSection.classList.add('hidden');
             workspace.classList.remove('hidden');
             loadingArea.classList.remove('hidden');
             resultArea.classList.add('hidden');
 
             try {
+                // Show resolution
                 const imgTemp = new Image();
                 imgTemp.src = URL.createObjectURL(file);
                 imgTemp.onload = () => { document.getElementById('resBadge').innerText = `${imgTemp.width} x ${imgTemp.height} px`; };
@@ -218,7 +190,7 @@
                 loadingStatus.innerText = "Initializing AI Engine...";
 
                 const config = {
-                    publicPath: "https://unpkg.com/@imgly/background-removal@1.4.5/dist/",
+                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/",
                     progress: (key, current, total) => {
                         if(key.includes('fetch')) {
                             const percent = Math.round((current/total)*100) || 0;
@@ -229,6 +201,7 @@
                     }
                 };
 
+                // The Magic
                 const imageBlob = await imglyRemoveBackground(file, config);
                 
                 const url = URL.createObjectURL(imageBlob);
@@ -247,7 +220,7 @@
 
             } catch (error) {
                 console.error("AI Error:", error);
-                alert(`Something went wrong. Please check your internet connection and try again.`);
+                alert(`Error: Could not process image. Please try a different image.`);
                 location.reload();
             }
         }
