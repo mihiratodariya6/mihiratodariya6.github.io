@@ -3,220 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>ToolMitra - Free Online PDF, Image & AI Tools</title>
-    <meta name="description" content="ToolMitra is your all-in-one free digital toolkit. Merge, compress, and edit PDFs, resize images, and use advanced AI tools online without installation. 100% secure and fast.">
-    <meta name="keywords" content="PDF tools, free online PDF editor, image resizer, AI tools, compress PDF, merge PDF, format converter, Indian utility tools">
-    <meta name="author" content="MihirSync">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/" />
-
-    <meta property="og:title" content="ToolMitra - Every Tool You Need in One Place">
-    <meta property="og:description" content="100% Free PDF, Image, Finance, and AI Tools. Process your files securely online.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="ToolMitra_NoBG_HD.png">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "ToolMitra",
-      "operatingSystem": "All",
-      "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "An all-in-one web application providing free tools for PDF manipulation, image editing, financial calculations, and AI-powered text generation.",
-      "creator": {
-        "@type": "Organization",
-        "name": "MihirSync"
-      }
-    }
-    </script>
-
+    <title>ToolMitra - Every Tool You Need</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { brandRed: '#e5322d' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brandRed: '#e5322d',
+                        bgLight: '#f8f9fa',
+                        textDark: '#333333',
+                        textGray: '#737373'
+                    }
+                }
+            }
+        }
     </script>
     <style>
-        body { background-color: #f8f9fa; color: #333333; }
-        .tool-card { transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .tool-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); transform: translateY(-3px); }
+        body { background-color: #f8f9fa; color: #333333; margin: 0; padding: 0; }
+        .tool-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .tool-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
         .icon-box { display: inline-flex; position: relative; }
         .icon-box .main-icon { font-size: 1.8rem; }
         .icon-box .sub-icon { position: absolute; bottom: -4px; right: -8px; font-size: 0.8rem; background: white; border-radius: 50%; padding: 2px; }
-        .show-card { display: block; animation: popIn 0.3s ease forwards; }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <nav class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center" aria-label="Main Navigation">
-            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition" title="ToolMitra Home">
-                <img src="ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-12 w-auto object-contain">
-                <span class="font-extrabold text-2xl tracking-tight text-gray-900">ToolMitra</span>
-            </a>
-            
-            <div class="hidden lg:flex space-x-8 text-[13px] font-bold text-gray-700 tracking-wide items-center">
-                <a href="tools/merge-pdf.html" class="hover:text-brandRed transition">MERGE PDF</a>
-                <a href="tools/split-pdf.html" class="hover:text-brandRed transition">SPLIT PDF</a>
-                <a href="tools/compress-pdf.html" class="hover:text-brandRed transition">COMPRESS PDF</a>
-                <a href="tools/remove-bg.html" class="hover:text-brandRed transition">REMOVE BG</a>
-            </div>
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-8">
+                    <a href="#" class="flex items-center gap-2">
+                        <i class="fas fa-heart text-brandRed text-2xl"></i>
+                        <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+                    </a>
+                    
+                    <div class="hidden lg:flex space-x-6 text-[13px] font-bold text-gray-700 tracking-wide">
+                        <a href="tools/merge-pdf.html" class="hover:text-brandRed transition">MERGE PDF</a>
+                        <a href="tools/split-pdf.html" class="hover:text-brandRed transition">SPLIT PDF</a>
+                        <a href="tools/compress-pdf.html" class="hover:text-brandRed transition">COMPRESS PDF</a>
+                        <div class="hover:text-brandRed transition cursor-pointer flex items-center gap-1">
+                            CONVERT PDF <i class="fas fa-chevron-down text-[10px]"></i>
+                        </div>
+                        <div class="hover:text-brandRed transition cursor-pointer flex items-center gap-1">
+                            ALL TOOLS <i class="fas fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="flex items-center gap-4 ml-auto">
-                <a href="#" class="text-sm font-bold text-gray-700 hover:text-brandRed transition hidden sm:block">Login</a>
-                <a href="#" class="bg-brandRed hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition">Sign up</a>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-sm font-bold text-gray-700 hover:text-brandRed hidden sm:block">Login</a>
+                    <a href="#" class="bg-brandRed hover:bg-red-700 text-white px-5 py-2 rounded text-sm font-bold transition">Sign up</a>
+                    <button class="lg:hidden text-gray-600 text-xl"><i class="fas fa-bars"></i></button>
+                </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main class="flex-grow pt-12 pb-10 px-4">
-        
-        <section class="text-center max-w-4xl mx-auto mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+    <main class="flex-grow pt-12 pb-20 px-4">
+        <div class="text-center max-w-4xl mx-auto mb-10">
+            <h1 class="text-[40px] font-bold text-gray-900 mb-4 leading-tight">
                 Every tool you need to work in one place
             </h1>
-            <p class="text-lg md:text-xl text-gray-500 mb-8 max-w-3xl mx-auto leading-relaxed">
-                All-in-one toolkit to manage PDFs, convert images, calculate finances, and generate AI content. 100% FREE, secure, and fast.
+            <p class="text-[18px] text-gray-500 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Every tool you need to use PDFs, manage numbers, and Indian utilities, at your fingertips. All are 100% FREE and easy to use! Merge, split, compress, and convert with just a few clicks.
             </p>
             
-            <nav aria-label="Tool Categories" class="flex flex-wrap justify-center gap-2 mb-10" id="categoryFilters">
-                <button onclick="filterTools('all', this)" class="filter-btn active bg-gray-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm transition">All Tools</button>
-                <button onclick="filterTools('pdf', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2.5 rounded-full text-sm font-semibold transition">PDF Tools</button>
-                <button onclick="filterTools('image', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2.5 rounded-full text-sm font-semibold transition">Image & Media</button>
-                <button onclick="filterTools('ai', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2.5 rounded-full text-sm font-semibold transition">AI Tools</button>
-                <button onclick="filterTools('utilities', this)" class="filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2.5 rounded-full text-sm font-semibold transition">Utilities</button>
-            </nav>
-        </section>
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <button class="bg-gray-800 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-sm">All</button>
+                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Workflows</button>
+                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Indian Spec</button>
+                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">Image Tools</button>
+                <button class="bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2 rounded-full text-sm font-semibold transition">AI Tools</button>
+            </div>
+        </div>
 
-        <section class="max-w-[1300px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-20" id="toolsGrid">
+        <div class="max-w-[1300px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             
-            <a href="tools/merge-pdf.html" data-category="pdf" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block" title="Merge PDF Files">
+            <a href="tools/merge-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
                 <div class="icon-box text-[#e5322d] mb-4">
-                    <i class="fas fa-file-pdf main-icon"></i><i class="fas fa-compress-arrows-alt sub-icon text-[#e5322d]"></i>
+                    <i class="fas fa-file-pdf main-icon"></i>
+                    <i class="fas fa-compress-arrows-alt sub-icon text-[#e5322d]"></i>
                 </div>
-                <h2 class="font-bold text-[17px] text-gray-900 mb-2">Merge PDF</h2>
-                <p class="text-[13px] text-gray-500 leading-relaxed">Combine multiple PDFs into a single document easily.</p>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Merge PDF</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Combine PDFs in the order you want with the easiest PDF merger available.</p>
             </a>
 
-            <a href="tools/prompt-generator.html" data-category="ai" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block relative overflow-hidden" title="AI Prompt Generator">
-                <span class="absolute top-0 right-0 bg-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">TRENDING</span>
-                <div class="icon-box text-indigo-600 mb-4"><i class="fas fa-terminal main-icon text-2xl"></i></div>
-                <h2 class="font-bold text-[17px] text-gray-900 mb-2">Prompt Generator</h2>
-                <p class="text-[13px] text-gray-500 leading-relaxed">Generate expert commands for ChatGPT and Midjourney.</p>
+            <a href="tools/split-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#f0714b] mb-4">
+                    <i class="fas fa-file-pdf main-icon"></i>
+                    <i class="fas fa-cut sub-icon text-[#f0714b]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Split PDF</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Separate one page or a whole set for easy conversion into independent PDF files.</p>
+            </a>
+
+            <a href="tools/compress-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#4bbb56] mb-4">
+                    <i class="fas fa-file-pdf main-icon"></i>
+                    <i class="fas fa-compress sub-icon text-[#4bbb56]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Compress PDF</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Reduce file size while optimizing for maximal PDF quality.</p>
+            </a>
+
+            <a href="tools/word-to-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#3c78d8] mb-4">
+                    <i class="fas fa-file-word main-icon"></i>
+                    <i class="fas fa-arrow-right sub-icon text-[#3c78d8]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Word to PDF</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Make DOC and DOCX files easy to read by converting them to PDF.</p>
+            </a>
+
+            <a href="tools/ppt-to-pdf.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#ff8e36] mb-4">
+                    <i class="fas fa-file-powerpoint main-icon"></i>
+                    <i class="fas fa-arrow-right sub-icon text-[#ff8e36]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">PowerPoint to PDF</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Make PPT and PPTX slideshows easy to view by converting them to PDF.</p>
+            </a>
+
+            <a href="tools/aadhaar-resize.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#f0ad4e] mb-4">
+                    <i class="fas fa-id-card main-icon"></i>
+                    <i class="fas fa-crop sub-icon text-[#f0ad4e]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Aadhaar Resize</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Auto crop & compress your documents to exact government specifications.</p>
+            </a>
+
+            <a href="tools/number-to-words.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#5bc0de] mb-4">
+                    <i class="fas fa-rupee-sign main-icon"></i>
+                    <i class="fas fa-font sub-icon text-[#5bc0de]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Number to Words</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Convert numbers to text in English, Gujarati, and Hindi with Indian format.</p>
+            </a>
+
+           <a href="tools/font-converter.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#20c997] mb-4">
+                    <i class="fas fa-globe-asia main-icon"></i>
+                    <i class="fas fa-language sub-icon text-[#20c997]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Universal Translator</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Auto-detect and translate text between 100+ worldwide languages instantly.</p>
             </a>
             
-            </section>
-
-        <article class="max-w-5xl mx-auto bg-white rounded-2xl p-8 md:p-12 border border-gray-200 shadow-sm mb-16 text-left">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Why use ToolMitra for your digital tasks?</h2>
-            <div class="text-gray-600 space-y-4 text-sm md:text-base leading-relaxed">
-                <p>ToolMitra is the ultimate online platform built to simplify your daily digital workflows. Whether you are a student, a business professional, or a content creator, our comprehensive suite of tools helps you manage your files efficiently.</p>
-                <p><strong>100% Free & Secure:</strong> All file processing is done securely. We prioritize your privacy, ensuring that your documents, images, and data remain safe and are automatically deleted from our servers after processing.</p>
-                <p><strong>AI-Powered Efficiency:</strong> From extracting text via OCR to generating smart AI prompts and fixing grammar, our advanced AI tools are designed to boost your productivity instantly.</p>
-            </div>
-        </article>
-        
-        <section class="max-w-6xl mx-auto py-10 px-4 border-t border-gray-200">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <a href="tools/desktop.html" class="bg-gray-50 p-8 rounded-2xl border border-gray-100 text-center hover:bg-gray-100 transition group block">
-                    <i class="fas fa-desktop text-3xl text-brandRed mb-4 group-hover:scale-110 transition"></i>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">ToolMitra Desktop</h3>
-                    <p class="text-gray-500 text-sm">Work offline with our Windows and Mac app.</p>
-                </a>
-                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 text-center relative opacity-80">
-                    <span class="absolute top-3 right-3 bg-gray-200 text-gray-700 text-[10px] font-bold px-2 py-1 rounded-full">COMING SOON</span>
-                    <i class="fas fa-mobile-alt text-3xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Mobile App</h3>
-                    <p class="text-gray-500 text-sm">Your favorite tools, right in your pocket.</p>
+            <a href="tools/remove-bg.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#9c27b0] mb-4">
+                    <i class="fas fa-image main-icon"></i>
+                    <i class="fas fa-eraser sub-icon text-[#9c27b0]"></i>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 text-center">
-                    <i class="fas fa-shield-alt text-3xl text-brandRed mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Secure Processing</h3>
-                    <p class="text-gray-500 text-sm">ISO standard encryption for all your files.</p>
-                </div>
-            </div>
-        </section>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">Remove Background</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Remove backgrounds from images instantly with high-precision AI.</p>
+            </a>
 
+            <a href="tools/pdf-to-jpg.html" class="tool-card bg-white rounded-xl p-6 border border-gray-100 block">
+                <div class="icon-box text-[#f1c40f] mb-4">
+                    <i class="fas fa-file-pdf main-icon"></i>
+                    <i class="fas fa-image sub-icon text-[#f1c40f]"></i>
+                </div>
+                <h3 class="font-bold text-[17px] text-gray-900 mb-2">PDF to JPG</h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Convert each PDF page into a JPG or extract all images contained in a PDF.</p>
+            </a>
+
+        </div>
     </main>
 
-    <footer class="bg-[#1d1f24] text-gray-400 py-16">
-        <div class="max-w-[1300px] mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-                <div>
-                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">PRODUCT</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Home</a></li>
-                        <li><a href="#" class="hover:text-white transition">All Tools</a></li>
-                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">RESOURCES</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="tools/desktop.html" class="hover:text-white transition">Desktop App</a></li>
-                        <li><a href="#" class="hover:text-white transition">Mobile App</a></li>
-                        <li><a href="#" class="hover:text-white transition">Developers API</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">LEGAL</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white transition">Security</a></li>
-                    </ul>
-                </div>
-                <div class="col-span-2">
-                    <h4 class="text-white font-bold mb-4 text-sm tracking-widest">STAY UPDATED</h4>
-                    <p class="text-sm mb-4">Subscribe to our newsletter for the latest AI tools and PDF features.</p>
-                    <div class="flex">
-                        <input type="email" placeholder="Your email address" class="px-4 py-2 rounded-l-lg w-full bg-[#2d3035] text-white border-none focus:ring-1 focus:ring-brandRed outline-none">
-                        <button class="bg-brandRed text-white px-4 py-2 rounded-r-lg font-bold hover:bg-red-700 transition">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-6">
-                    <button class="flex items-center gap-2 border border-gray-600 px-3 py-1 rounded text-sm hover:text-white transition text-gray-400">
-                        <i class="fas fa-globe"></i> English <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div class="flex gap-5 text-lg text-gray-400">
-                        <a href="#" class="hover:text-white transition"><i class="fab fa-x-twitter"></i></a>
-                        <a href="#" class="hover:text-white transition"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <p class="text-sm">© 2026 ToolMitra. Built with <i class="fas fa-heart text-brandRed"></i> by MihirSync</p>
+    <footer class="bg-white border-t border-gray-200 mt-auto py-8">
+        <div class="max-w-[1300px] mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-gray-500 text-[13px]">
+            <p>&copy; 2026 ToolMitra. All rights reserved.</p>
+            <div class="space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-brandRed">Terms of Use</a>
+                <a href="#" class="hover:text-brandRed">Privacy Policy</a>
+                <a href="#" class="hover:text-brandRed">Contact us</a>
             </div>
         </div>
     </footer>
 
-    <script>
-        function filterTools(category, clickedBtn) {
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.className = "filter-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 px-5 py-2.5 rounded-full text-sm font-semibold transition";
-            });
-            clickedBtn.className = "filter-btn active bg-gray-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm transition";
-            
-            document.querySelectorAll('.tool-card').forEach(card => {
-                card.classList.remove('show-card');
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'block';
-                    setTimeout(() => card.classList.add('show-card'), 10);
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-    </script>
 </body>
 </html>
