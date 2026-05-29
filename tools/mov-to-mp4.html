@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bulk MOV to MP4 Converter | ToolMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-8">Bulk MOV to MP4 Converter</h1>
+        
+        <div class="bg-white p-8 rounded-xl shadow-md">
+            <input type="file" id="upload" multiple accept=".mov" class="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg mb-4">
+            <button id="convertBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition">Convert to MP4</button>
+            
+            <div id="status" class="mt-6 text-sm text-gray-600"></div>
+            <div id="downloadArea" class="mt-4 space-y-2"></div>
+        </div>
+    </div>
+
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        document.getElementById('convertBtn').addEventListener('click', async () => {
+            const files = document.getElementById('upload').files;
+            const status = document.getElementById('status');
+            const downloadArea = document.getElementById('downloadArea');
+            
+            if (files.length === 0) return alert("Select MOV files first!");
+            
+            status.innerText = "Loading FFMPEG (First time may take a moment)...";
+            await ffmpeg.load();
+            
+            for (const file of files) {
+                status.innerText = `Converting: ${file.name}...`;
+                ffmpeg.FS('writeFile', file.name, await fetchFile(file));
+                
+                await ffmpeg.run('-i', file.name, `${file.name.split('.')[0]}.mp4`);
+                
+                const data = ffmpeg.FS('readFile', `${file.name.split('.')[0]}.mp4`);
+                const url = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${file.name.split('.')[0]}.mp4`;
+                a.innerText = `Download ${file.name.split('.')[0]}.mp4`;
+                a.className = "block bg-green-600 text-white p-2 rounded mb-2 text-center";
+                downloadArea.appendChild(a);
+            }
+            status.innerText = "All conversions finished!";
+        });
+    </script>
+</body>
+</html>
