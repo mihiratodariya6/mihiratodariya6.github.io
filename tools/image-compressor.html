@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Free Image Compressor Online - Reduce Photo Size | ToolMitra</title>
+    <meta name="description" content="Compress JPG, PNG, and WebP images online for free without losing quality. Reduce image file size instantly with our secure, offline browser tool.">
+    <meta name="keywords" content="image compressor, reduce photo size, compress jpg online, image size reducer, compress png, picture compressor, ToolMitra">
+    <meta name="author" content="MihirSync">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://mihirsync.github.io/ToolMitra/tools/image-compressor.html" />
+
+    <meta property="og:title" content="Image Compressor Online - Reduce Size Instantly | ToolMitra">
+    <meta property="og:description" content="Reduce image file sizes instantly without losing quality. 100% Secure, fast, and processes offline in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="../ToolMitra_NoBG_HD.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ToolMitra Image Compressor",
+      "description": "An advanced, browser-native utility designed to compress and reduce the file size of images (JPG, PNG, WebP) seamlessly without uploading files to an external server.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "All",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to compress an image online without losing quality",
+      "step": [
+        { "@type": "HowToStep", "text": "Upload your image file (JPG, PNG, WebP) using the drag-and-drop zone." },
+        { "@type": "HowToStep", "text": "Adjust the compression quality slider. Lower quality equals a smaller file size." },
+        { "@type": "HowToStep", "text": "Click 'Compress Image' to process the photo locally in your browser." },
+        { "@type": "HowToStep", "text": "Compare the original and new file sizes, then download your compressed image." }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is my image uploaded to your server?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No! ToolMitra's Image Compressor uses modern HTML5 Canvas technology to compress your photos directly on your device. Your data never leaves your computer." }
+      }, {
+        "@type": "Question",
+        "name": "Will compressing my image ruin its quality?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Not necessarily. Using our quality slider, you can find the perfect balance between keeping the image visually sharp and reducing the file size significantly." }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brandOrange: '#f97316' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8f9fa; color: #333333; }
+        .upload-area { border: 2px dashed #d1d5db; transition: all 0.3s ease; }
+        .upload-area.dragover { border-color: #f97316; background-color: #fff7ed; }
+        
+        /* Custom Range Slider */
+        input[type=range] { accent-color: #f97316; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <img src="../ToolMitra_NoBG_HD.png" alt="ToolMitra Logo" class="h-10 w-auto object-contain">
+                <span class="font-bold text-2xl tracking-tight text-gray-900">ToolMitra</span>
+            </a>
+            <a href="../index.html" class="text-sm font-semibold text-gray-600 hover:text-brandOrange flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
+        </div>
+    </nav>
+
+    <div class="bg-orange-50 border-b border-orange-100 pt-10 pb-8">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <div class="w-16 h-16 mx-auto bg-white text-brandOrange rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm border border-orange-100">
+                <i class="fas fa-compress-arrows-alt"></i>
+            </div>
+            <h1 class="text-[32px] font-bold text-gray-900 mb-2">Image Compressor</h1>
+            <p class="text-gray-600 text-[16px]">Compress JPG, PNG, and WebP images to exact KB limits without losing quality.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow py-8 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div id="dropZone" class="upload-area bg-white rounded-xl p-10 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px]" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-image text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Select Image</h3>
+                <p class="text-gray-500 text-sm mb-6">Drag & drop your JPG, PNG, or WEBP file here</p>
+                <button class="bg-brandOrange hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg shadow-md pointer-events-none">
+                    Select Image
+                </button>
+                <input type="file" id="fileInput" class="hidden" accept="image/jpeg, image/png, image/webp">
+            </div>
+
+            <div id="workspaceSection" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+                
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center">
+                    <h3 class="font-bold text-gray-800 text-lg w-full mb-4 border-b pb-2"><i class="fas fa-eye text-brandOrange mr-2"></i> Original Image Preview</h3>
+                    <div class="bg-gray-50 w-full rounded-lg overflow-hidden flex items-center justify-center border border-gray-100 min-h-[250px] p-2">
+                        <img id="previewImage" class="max-w-full max-h-[350px] object-contain rounded shadow-sm" alt="Preview">
+                    </div>
+                    <div class="w-full flex justify-between items-center mt-4 bg-gray-100 p-3 rounded-lg border border-gray-200">
+                        <span class="text-sm font-semibold text-gray-600">Original Size:</span>
+                        <span id="originalSizeTxt" class="text-sm font-bold text-gray-900">0 KB</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                    <h3 class="font-bold text-gray-800 text-xl mb-6">Compression Settings</h3>
+                    
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="text-sm font-bold text-gray-600">Image Quality</label>
+                            <span id="qualityValTxt" class="bg-orange-100 text-brandOrange font-bold px-3 py-1 rounded text-sm">80%</span>
+                        </div>
+                        <input type="range" id="qualitySlider" min="10" max="100" step="1" value="80" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" oninput="document.getElementById('qualityValTxt').innerText = this.value + '%'">
+                        <div class="flex justify-between text-xs text-gray-400 mt-2 font-semibold">
+                            <span>Small File / Low Quality</span>
+                            <span>Large File / High Quality</span>
+                        </div>
+                    </div>
+
+                    <button id="compressBtn" onclick="compressImage()" class="w-full bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors text-lg shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-cog"></i> Compress Image
+                    </button>
+                    <p id="statusText" class="text-center text-brandOrange font-bold mt-4 hidden"><i class="fas fa-spinner fa-spin"></i> Compressing...</p>
+                </div>
+            </div>
+
+            <div id="downloadSection" class="hidden mt-8 text-center bg-white p-8 md:p-12 rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Image Compressed Successfully!</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-1">Original Size</p>
+                        <p class="text-xl font-bold text-gray-800" id="finalOriginalSize">0 KB</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                        <p class="text-xs font-bold text-green-600 uppercase mb-1">New Size</p>
+                        <p class="text-xl font-bold text-green-700" id="finalNewSize">0 KB</p>
+                    </div>
+                </div>
+
+                <a id="downloadBtn" href="#" download="ToolMitra_Compressed.jpg" class="w-full bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg inline-flex items-center justify-center gap-3 transition text-xl">
+                    <i class="fas fa-download"></i> Download Image
+                </a>
+                
+                <div class="mt-6">
+                    <button onclick="resetTool()" class="text-gray-500 hover:text-gray-700 font-semibold underline text-sm">Compress another image</button>
+                </div>
+            </div>
+
+        </div>
+
+        <article class="max-w-5xl mx-auto bg-white p-8 rounded-3xl border border-gray-200 shadow-sm mt-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">How Does the ToolMitra Image Compressor Work?</h2>
+            <p class="text-gray-600 mb-6 leading-relaxed">Most online image compressors upload your personal photos to a remote server, process them, and send them back. ToolMitra's Image Compressor is entirely different. We utilize advanced HTML5 Canvas architecture to read and compress your images directly inside your web browser. This means lightning-fast speeds and 100% data privacy.</p>
+            
+            <div class="grid md:grid-cols-3 gap-6 mt-8">
+                <div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2"><i class="fas fa-shield-alt text-brandOrange mr-2"></i> Unmatched Security</h3>
+                    <p class="text-sm text-gray-600">Your photos are never uploaded, stored, or viewed by anyone. Total offline processing ensures military-grade privacy.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2"><i class="fas fa-tachometer-alt text-brandOrange mr-2"></i> Zero Wait Times</h3>
+                    <p class="text-sm text-gray-600">Since there is no uploading or downloading from a server, compression happens instantaneously on your device.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2"><i class="fas fa-sliders-h text-brandOrange mr-2"></i> Ultimate Control</h3>
+                    <p class="text-sm text-gray-600">Use our intuitive quality slider to find the perfect sweet spot between visual clarity and a reduced file size.</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-2 justify-center">
+                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">#ImageCompressor</span>
+                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">#ReducePhotoSize</span>
+                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">#ToolMitra</span>
+                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">#PrivacyFirst</span>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        let currentFile = null;
+        let originalSizeKB = 0;
+        let originalFileName = "";
+        const sourceImage = new Image();
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        // Drag and Drop Logic
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+        
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                alert("Please upload a valid image file (JPG, PNG, WebP).");
+                return;
+            }
+
+            currentFile = file;
+            originalFileName = file.name;
+            originalSizeKB = (file.size / 1024).toFixed(2);
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                sourceImage.onload = function() {
+                    document.getElementById('previewImage').src = event.target.result;
+                    document.getElementById('originalSizeTxt').innerText = originalSizeKB + " KB";
+                    document.getElementById('finalOriginalSize').innerText = originalSizeKB + " KB";
+                    
+                    document.getElementById('dropZone').classList.add('hidden');
+                    document.getElementById('workspaceSection').classList.remove('hidden');
+                };
+                sourceImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function compressImage() {
+            const convertBtn = document.getElementById('compressBtn');
+            const statusText = document.getElementById('statusText');
+            
+            convertBtn.classList.add('hidden');
+            statusText.classList.remove('hidden');
+
+            // Timeout added just to allow UI to update the loading spinner
+            setTimeout(() => {
+                const quality = parseInt(document.getElementById('qualitySlider').value) / 100;
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = sourceImage.width;
+                canvas.height = sourceImage.height;
+                const ctx = canvas.getContext('2d');
+                
+                // Draw background white for transparent PNGs converted to JPEG
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(sourceImage, 0, 0);
+
+                // Compress using canvas toBlob
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const newSizeKB = (blob.size / 1024).toFixed(2);
+                        const blobUrl = URL.createObjectURL(blob);
+                        
+                        document.getElementById('finalNewSize').innerText = newSizeKB + " KB";
+                        
+                        const downloadBtn = document.getElementById('downloadBtn');
+                        downloadBtn.href = blobUrl;
+                        
+                        // Smart naming
+                        const nameParts = originalFileName.split('.');
+                        nameParts.pop(); // remove extension
+                        downloadBtn.download = nameParts.join('.') + "_compressed.jpg";
+
+                        document.getElementById('workspaceSection').classList.add('hidden');
+                        document.getElementById('downloadSection').classList.remove('hidden');
+                    } else {
+                        alert("Error during compression. Image might be too large for the browser.");
+                    }
+                    
+                    convertBtn.classList.remove('hidden');
+                    statusText.classList.add('hidden');
+                }, 'image/jpeg', quality);
+                
+            }, 100);
+        }
+
+        function resetTool() {
+            currentFile = null;
+            fileInput.value = "";
+            document.getElementById('qualitySlider').value = 80;
+            document.getElementById('qualityValTxt').innerText = "80%";
+            
+            document.getElementById('workspaceSection').classList.add('hidden');
+            document.getElementById('downloadSection').classList.add('hidden');
+            document.getElementById('dropZone').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
